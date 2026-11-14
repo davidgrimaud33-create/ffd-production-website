@@ -1,0 +1,27 @@
+name: Deploy zu Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      # Nur die Website hochladen, nicht README, .github usw.
+      - name: Dateien vorbereiten
+        run: |
+          mkdir dist
+          cp index.html dist/
+
+      - name: Auf Cloudflare Pages veröffentlichen
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: a85652029c4e35a2fc75172ec88c3b9d
+          command: pages deploy dist --project-name=ffd-production-website --branch=main --commit-dirty=true
