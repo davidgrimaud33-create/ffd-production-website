@@ -8,7 +8,7 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelect
 /* ---------- Sprache: Deutsch ist die Vorlage, Englisch wird beim Laden eingesetzt ---------- */
 const EN={
   "Prototyp · Entwurf 3 · DeepMetis für FFD Production": "Prototype · Draft 3 · DeepMetis for FFD Production",
-  "Datenschutzerklärung und weitere Bilder folgen": "Privacy policy and further images to follow",
+  "Weitere Bilder folgen": "Further images to follow",
   "In Entwicklung": "In development",
   "Filme": "Films",
   "Über": "About",
@@ -108,7 +108,7 @@ const EN={
   "Agentur FREHSE": "Agentur FREHSE",
   "Telefon": "Phone",
   "Impressum": "Legal notice",
-  "Datenschutz folgt": "Privacy policy to follow",
+  "Datenschutz": "Privacy policy",
   "Rechtliches": "Legal",
   "Schließen": "Close",
   "Inhaber: Farouk El-Khalili": "Owner: Farouk El-Khalili",
@@ -216,6 +216,8 @@ const cnt=$('#cnt'), fmt=n=>Math.round(n).toLocaleString(LANG==='en'?'en-GB':'de
 const dB=$('#dlg-bank'), dI=$('#dlg-img'), dImp=$('#dlg-imp'), zoom=$('#zoom');
 $$('[data-open="imp"]').forEach(b=>b.addEventListener('click',()=>{dImp.showModal(); lenis&&lenis.stop()}));
 [dB,dI,dImp].forEach(d=>{d.addEventListener('close',()=>lenis&&lenis.start()); d.addEventListener('click',e=>{if(e.target===d)d.close()})});
+// Direktaufruf des Impressums, z. B. von der Datenschutzseite aus: index.html#impressum
+if(location.hash==='#impressum'){ dImp.showModal(); lenis&&lenis.stop() }
 $$('[data-zoom]').forEach(b=>b.addEventListener('click',()=>{const im=b.querySelector('img'); zoom.src=im.src; zoom.alt=im.alt; dI.showModal(); lenis&&lenis.stop()}));
 $$('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
 let amount=50;

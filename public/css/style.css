@@ -361,3 +361,16 @@ dialog::backdrop{background:rgba(22,23,26,.74)}
   *{transition:none!important}
   dialog[open]{animation:none}
 }
+
+/* ---------- Rechtliche Unterseiten (Datenschutz) ---------- */
+.legal{padding-block:clamp(48px,8vw,110px) clamp(70px,10vw,140px)}
+.legal .in{max-width:68ch;display:grid;gap:18px}
+.legal h1.disp{font-size:clamp(2.4rem,6vw,4.4rem);margin-bottom:10px}
+.legal h2{font-family:var(--serif);font-weight:500;font-size:clamp(1.35rem,2.4vw,1.75rem);line-height:1.2;margin:34px 0 0;padding-top:26px;border-top:1px solid var(--line)}
+.legal h3{font-family:var(--sans);font-weight:600;font-size:17px;margin:12px 0 0}
+.legal p,.legal li{line-height:1.65}
+.legal ul{margin:0;padding-left:1.2em;display:grid;gap:6px}
+.legal a{text-underline-offset:3px}
+.legal .stand{color:var(--asphalt)}
+.back{text-decoration:none;font-size:11px;letter-spacing:.14em}
+.back:hover{box-shadow:inset 0 -1.5px var(--light)}

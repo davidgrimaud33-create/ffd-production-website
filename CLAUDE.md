@@ -8,13 +8,18 @@ Kein Framework, kein Build-Schritt. Bearbeitet wird direkt in `public/`.
 ```
 public/            ← alles, was online geht
   index.html       Startseite (One-Pager, alle Sektionen + Dialoge wie Impressum/Spenden)
+  datenschutz.html Datenschutzerklärung (nur Deutsch, ohne main.js)
+  css/fonts.css    Schriften (Lora, Inter, Oswald, Source Serif 4), Dateien in fonts/
   css/style.css    gesamtes Styling, Farben als Variablen in :root
-  js/main.js       Animationen (GSAP, Lenis), Sprache DE/EN, Spenden-Dialog, QR-Code
+  js/main.js       Animationen, Sprache DE/EN, Spenden-Dialog, QR-Code
+  vendor/          GSAP, ScrollTrigger, Lenis, qrcode-generator (lokale Kopien)
   img/             Bilder als JPG (sprechende Dateinamen)
 .github/workflows/deploy.yml   Veröffentlichung zu Cloudflare Pages
 ```
 
-Externe Bibliotheken kommen per CDN (GSAP, ScrollTrigger, Lenis, qrcode-generator), die Schriften über Google Fonts (siehe `<head>` in `index.html`).
+**Keine externen Ressourcen einbinden** (kein Google Fonts, kein CDN, keine eingebetteten Videos, kein Tracking). Die Datenschutzerklärung sagt ausdrücklich, dass beim Aufruf keine Daten an Dritte gehen. Wer etwas Externes hinzufügt, muss `datenschutz.html` mit anpassen.
+
+Das Impressum ist ein Dialog auf der Startseite und lässt sich direkt über `index.html#impressum` öffnen.
 
 ## Zweisprachigkeit (wichtig)
 

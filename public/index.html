@@ -4,9 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>FFD Production Website</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&family=Oswald:wght@200;300;400&family=Source+Serif+4:ital,wght@1,400&display=swap">
+<link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -14,7 +12,7 @@
 <div id="grain" aria-hidden="true"></div>
 <div class="cursor" aria-hidden="true"><span></span></div>
 
-<div class="proto" role="note"><div class="wrap"><span class="label">Prototyp · Entwurf 3 · DeepMetis für FFD Production</span><span class="label">Datenschutzerklärung und weitere Bilder folgen</span></div></div>
+<div class="proto" role="note"><div class="wrap"><span class="label">Prototyp · Entwurf 3 · DeepMetis für FFD Production</span><span class="label">Weitere Bilder folgen</span></div></div>
 
 <header class="top">
   <div class="wrap">
@@ -235,7 +233,7 @@
     </div>
     <p class="giant" id="giant" aria-hidden="true">FFD</p>
   </section>
-  <footer><div class="wrap"><span class="label">© 2026 FFD Production · Farouk El-Khalili</span><span class="label" style="display:flex;gap:18px"><button class="flink label" data-open="imp">Impressum</button><span>Datenschutz folgt</span></span></div></footer>
+  <footer><div class="wrap"><span class="label">© 2026 FFD Production · Farouk El-Khalili</span><span class="label" style="display:flex;gap:18px"><button class="flink label" data-open="imp">Impressum</button><a class="flink label" href="datenschutz.html">Datenschutz</a></span></div></footer>
 </main>
 
 <dialog id="dlg-imp" aria-labelledby="imp-title" style="width:min(640px,calc(100vw - 32px))">
@@ -281,10 +279,10 @@
   </div>
 </dialog>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script src="vendor/qrcode.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
