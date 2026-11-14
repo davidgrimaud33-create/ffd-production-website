@@ -1,4 +1,8 @@
 # FFD Production – Website
 
-Statische One-Page-Website (eine selbstständige `index.html`, Bilder eingebettet).
-Gehostet über Cloudflare Pages, automatisches Deployment bei jedem Push auf `main`.
+Statische Website, Quelltext in `public/`. Jeder Push auf `main` veröffentlicht automatisch über Cloudflare Pages:
+https://ffd-production-website.pages.dev
+
+Lokal ansehen: `python3 -m http.server 8000 -d public`
+
+Details zum Aufbau und Arbeitsablauf: siehe `CLAUDE.md`.

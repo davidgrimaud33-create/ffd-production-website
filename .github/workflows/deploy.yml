@@ -11,17 +11,12 @@ jobs:
     permissions:
       contents: read
     steps:
+      # Hochgeladen wird nur der Ordner public/ (die eigentliche Website)
       - uses: actions/checkout@v4
-
-      # Nur die Website hochladen, nicht README, .github usw.
-      - name: Dateien vorbereiten
-        run: |
-          mkdir dist
-          cp index.html dist/
 
       - name: Auf Cloudflare Pages veröffentlichen
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: a85652029c4e35a2fc75172ec88c3b9d
-          command: pages deploy dist --project-name=ffd-production-website --branch=main --commit-dirty=true
+          command: pages deploy public --project-name=ffd-production-website --branch=main --commit-dirty=true
