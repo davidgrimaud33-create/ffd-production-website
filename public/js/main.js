@@ -7,8 +7,6 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelect
 
 /* ---------- Sprache: Deutsch ist die Vorlage, Englisch wird beim Laden eingesetzt ---------- */
 const EN={
-  "Prototyp · Entwurf 3 · DeepMetis für FFD Production": "Prototype · Draft 3 · DeepMetis for FFD Production",
-  "Weitere Bilder folgen": "Further images to follow",
   "In Entwicklung": "In development",
   "Filme": "Films",
   "Über": "About",

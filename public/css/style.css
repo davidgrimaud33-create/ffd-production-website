@@ -73,9 +73,6 @@ h3.disp{font-size:clamp(1.5rem,2.6vw,2rem)}
 .cursor.big span{opacity:1}
 @media (hover:hover) and (pointer:fine){.cursor{display:grid}}
 
-.proto{background:var(--ink);color:var(--paper);padding-block:8px}
-.proto .wrap{display:flex;gap:6px 16px;flex-wrap:wrap;justify-content:space-between}
-.proto .label{font-size:10.5px;letter-spacing:.14em}
 
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--paper);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;height:var(--head)}
