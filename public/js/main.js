@@ -109,6 +109,7 @@ const EN={
   "Telefon": "Phone",
   "Impressum": "Legal notice",
   "Datenschutz": "Privacy policy",
+  "Gestaltung & Umsetzung: DeepMetis GmbH": "Design & development: DeepMetis GmbH",
   "Rechtliches": "Legal",
   "Schließen": "Close",
   "Inhaber: Farouk El-Khalili": "Owner: Farouk El-Khalili",
