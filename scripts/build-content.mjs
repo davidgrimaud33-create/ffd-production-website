@@ -16,6 +16,8 @@ const isDate = v => /^\d{4}-\d{2}-\d{2}/.test(str(v));
 const safeLink = v => (/^https?:\/\/\S+$/i.test(str(v)) ? str(v) : '');
 // Nur Bilder von der eigenen Website zulassen
 const safeImg = v => { const s = str(v).replace(/^\/?/, '/'); return /^\/img\/[\w./-]+\.(jpe?g|png|webp)$/i.test(s) && !s.includes('..') ? s : '' };
+// Hat die GitHub Action ein PNG/WebP in JPG umgewandelt, auf die kleinere JPG zeigen
+const preferJpg = p => { if (!/\.(png|webp)$/i.test(p)) return p; const j = p + '.jpg'; return existsSync(join(root, 'public', j)) ? j : p };
 const warn = (f, m) => console.warn(`⚠ ${f}: ${m}`);
 
 /* ---------- Meldungen ---------- */
@@ -31,7 +33,7 @@ for (const f of existsSync(dir) ? readdirSync(dir).filter(f => f.endsWith('.json
     projekt: PROJEKTE.includes(d.projekt) ? d.projekt : 'ffd',
     de: { titel: str(d.titel_de), text: str(d.text_de), bild_text: str(d.bild_text_de) },
     en: { titel: str(d.titel_en), text: str(d.text_en), bild_text: str(d.bild_text_en) },
-    bild: safeImg(d.bild),
+    bild: preferJpg(safeImg(d.bild)),
     link: safeLink(d.link),
   };
   if (!isDate(item.datum) || !item.de.titel || !item.de.text) { warn(f, 'Datum, deutscher Titel oder Text fehlt, übersprungen'); continue }
