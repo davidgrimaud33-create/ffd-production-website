@@ -151,7 +151,10 @@ const EN={
   "Farouk El-Khalili im Halbprofil vor dunklem Hintergrund": "Farouk El-Khalili in half profile against a dark background",
   "Bild in groß": "Enlarged image",
   "Betrag": "Amount",
-  "GiroCode für die Überweisung": "GiroCode for the bank transfer"
+  "GiroCode für die Überweisung": "GiroCode for the bank transfer",
+  "Aktuelles": "News",
+  "Alle Meldungen →": "All news →",
+  "Bereits gesammelt": "Raised so far"
 };
 const LANG=(()=>{ let l='de'; try{ l=localStorage.getItem('ffd-lang')||l }catch(e){} if(location.hash==='#en') l='en'; if(location.hash==='#de') l='de'; return l==='en'?'en':'de' })();
 const T=s=>(LANG==='en'&&EN[s])||s;
@@ -208,8 +211,21 @@ $$('[data-split]').forEach(el=>{const out=[]; el.childNodes.forEach(n=>{const cl
 const track=$('#track'); const names=TAPE.map(([n,s])=>`<span${s?' class="s"':''}>${n.replace(/&/g,'&amp;')}</span>`).join(''); track.innerHTML=names.repeat(4);
 let tx=0,lastY=scrollY,vel=0;
 
-/* ---------- Finanzierungsfelder (Muster) ---------- */
-const cnt=$('#cnt'), fmt=n=>Math.round(n).toLocaleString(LANG==='en'?'en-GB':'de-DE');
+/* ---------- Crowdfunding: Zahlen aus data/crowdfunding.json (gepflegt über Pages CMS) ---------- */
+const cnt=$('#cnt'), cntG=$('#cnt-g'), fmt=n=>Math.round(n).toLocaleString(LANG==='en'?'en-GB':'de-DE');
+const CF_STATUS={vorproduktion:['Vorproduktion','Pre-production'],crowdfunding:['Crowdfunding läuft','Crowdfunding live'],dreh:['Dreharbeiten','Shooting'],post:['Postproduktion','Post-production'],fertig:['Finanzierung abgeschlossen','Fully funded']};
+fetch('data/crowdfunding.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null).then(cf=>{ if(!cf||!(cf.ziel>0)) return;
+  const en=LANG==='en'; cnt.dataset.to=cf.ziel; cnt.textContent=fmt(cf.ziel);
+  if(CF_STATUS[cf.status]) $('#cf-status').textContent=CF_STATUS[cf.status][en?1:0];
+  if(cf.gesammelt>0){ cntG.dataset.to=cf.gesammelt; cntG.textContent=fmt(cf.gesammelt); $('#cf-raised').hidden=false;
+    const pct=Math.min(100,cf.gesammelt/cf.ziel*100), bar=$('#cf-bar'); bar.hidden=false; bar.setAttribute('role','img');
+    bar.setAttribute('aria-label',en?`${Math.round(pct)} % of the funding goal reached`:`${Math.round(pct)} % des Finanzierungsziels erreicht`);
+    new IntersectionObserver((es,o)=>es.forEach(e=>{ if(e.isIntersecting){ bar.style.setProperty('--p',pct+'%'); o.disconnect() } })).observe(bar);
+    const meta=[en?`${Math.round(pct)} % reached`:`${Math.round(pct)} % erreicht`];
+    if(cf.unterstuetzende>0) meta.push(en?`${fmt(cf.unterstuetzende)} ${cf.unterstuetzende===1?'supporter':'supporters'}`:`${fmt(cf.unterstuetzende)} Unterstützer:innen`);
+    if(cf.stand){ const [y,m,d]=cf.stand.split('-'); meta.push(en?`as of ${d}/${m}/${y}`:`Stand ${d}.${m}.${y}`) }
+    const mp=$('#cf-meta'); mp.textContent=meta.join(' · '); mp.hidden=false }
+  hasGsap&&ScrollTrigger.refresh() });
 
 /* ---------- Dialog ---------- */
 const dB=$('#dlg-bank'), dI=$('#dlg-img'), dImp=$('#dlg-imp'), zoom=$('#zoom');
@@ -286,10 +302,10 @@ function paintBeam(t){ beamSize(); const V=VAR[variant]; if(!bq||!V) return; con
 (()=>{const n=$('#ldn'); if(!n||reduce) return; const t0=performance.now(); const tick=()=>{const k=Math.min(1,(performance.now()-t0)/1250); n.textContent=Math.round(k*100); if(k<1) requestAnimationFrame(tick)}; tick()})();
 
 /* ---------- Abschnittsanzeige ---------- */
-const pill=$('#pill'), SECS=[['.hero','Start'],['#projekt','In Entwicklung'],['#filme','Filme'],['#ueber','Über'],['#kontakt','Kontakt']].map(([q,t])=>[$(q),T(t)]); let pillI=-1;
-function pillUpdate(){ let i=0; SECS.forEach(([el],k)=>{ if(el.getBoundingClientRect().top<innerHeight*.55) i=k });
+const pill=$('#pill'), SECS=[['.hero','Start'],['#projekt','In Entwicklung'],['#aktuelles','Aktuelles'],['#filme','Filme'],['#ueber','Über'],['#kontakt','Kontakt']].map(([q,t])=>[$(q),T(t)]); let pillI=-1;
+function pillUpdate(){ let i=0; SECS.forEach(([el],k)=>{ if(!el.hidden&&el.getBoundingClientRect().top<innerHeight*.55) i=k });
   pill.classList.toggle('off',scrollY<40||!!document.querySelector('dialog[open]'));
-  if(i!==pillI){ pillI=i; $('#pill-n').textContent='0'+(i+1); $('#pill-t').textContent=SECS[i][1] } }
+  if(i!==pillI){ pillI=i; $('#pill-n').textContent='0'+SECS.slice(0,i+1).filter(([el])=>!el.hidden).length; $('#pill-t').textContent=SECS[i][1] } }
 addEventListener('scroll',pillUpdate,{passive:true}); pillUpdate();
 
 /* ---------- Filmografie: Vorschaubild folgt der Zeile ---------- */
@@ -327,7 +343,7 @@ function choreo(){
   gsap.fromTo('[data-split="fill"] .i',{opacity:.18},{opacity:1,stagger:.1,ease:'none',scrollTrigger:{trigger:'.statement',start:'top 75%',end:'bottom 60%',scrub:.5}});
   gsap.from('.statement .quote',{opacity:0,x:-30,duration:1,ease:'power3.out',scrollTrigger:{trigger:'.statement .quote',start:'top 88%',once:true}});
   gsap.from('.theme .fq',{opacity:0,x:-24,duration:1,ease:'power3.out',scrollTrigger:{trigger:'.theme',start:'top 85%',once:true}});
-  ScrollTrigger.create({trigger:cnt,start:'top 90%',once:true,onEnter:()=>{const o={v:0}; gsap.to(o,{v:+cnt.dataset.to,duration:1.8,ease:'power2.out',onUpdate:()=>cnt.textContent=fmt(o.v)})}});
+  ScrollTrigger.create({trigger:cnt,start:'top 90%',once:true,onEnter:()=>[cnt,cntG].forEach(c=>{ const to=+c.dataset.to; if(!to) return; const o={v:0}; gsap.to(o,{v:to,duration:1.8,ease:'power2.out',onUpdate:()=>c.textContent=fmt(o.v),onComplete:()=>c.textContent=fmt(+c.dataset.to)})})});
   gsap.from('.uses li',{opacity:0,x:-18,duration:.6,ease:'power3.out',stagger:.06,scrollTrigger:{trigger:'.uses',start:'top 90%',once:true}});
   gsap.from('.crew div',{opacity:0,x:-24,duration:.7,ease:'power3.out',stagger:.08,scrollTrigger:{trigger:'.crew',start:'top 88%',once:true}});
   gsap.from('.fund .left .frame',{clipPath:'inset(50% 0 50% 0)',duration:1.3,ease:'expo.out',scrollTrigger:{trigger:'.fund',start:'top 80%',once:true}});

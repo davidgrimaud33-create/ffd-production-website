@@ -18,6 +18,7 @@
     <a class="logo" href="#top" aria-label="FFD Production, zum Seitenanfang"><b>FFD</b><i></i><span>Production</span></a>
     <nav class="main" aria-label="Hauptnavigation">
       <a href="#projekt">In Entwicklung</a>
+      <a href="#aktuelles">Aktuelles</a>
       <a href="#filme">Filme</a>
       <a href="#ueber">Über</a>
       <a href="#kontakt">Kontakt</a>
@@ -87,10 +88,13 @@
             <div><span class="label soft">Format</span><span>Kurzfilm</span></div>
           </div>
           <div class="sample">
-            <div class="row2"><span class="label">Finanzierung</span><span class="chip label"><span class="dot pulse"></span>Vorproduktion</span></div>
-            <div class="figs" style="grid-template-columns:1fr">
+            <div class="row2"><span class="label">Finanzierung</span><span class="chip label"><span class="dot pulse"></span><span id="cf-status">Vorproduktion</span></span></div>
+            <div class="figs cf-figs">
+              <div id="cf-raised" hidden><span class="label soft">Bereits gesammelt</span><b><span id="cnt-g" data-to="0">0</span> €</b></div>
               <div><span class="label soft">Finanzierungsziel</span><b><span id="cnt" data-to="7500">7.500</span> €</b></div>
             </div>
+            <div class="cf-bar" id="cf-bar" hidden><i></i></div>
+            <p class="cf-meta" id="cf-meta" hidden></p>
             <div style="display:grid;gap:12px">
               <span class="label soft">Dafür wird das Geld eingesetzt</span>
               <ul class="uses"><li>Gagen</li><li>Technik</li><li>Drehort und Ausstattung</li><li>Postproduktion</li><li>Festivaleinreichungen</li><li>Barrierefreie Fassung</li></ul>
@@ -104,6 +108,11 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="wrap block news" id="aktuelles" data-news-section hidden>
+    <div class="sec-head"><span class="label">Aktuelles</span><a class="label soft nw-all" href="news.html">Alle Meldungen →</a></div>
+    <div class="nw-list home" data-news="home" data-limit="3"></div>
   </section>
 
   <section class="wrap block" id="filme">
@@ -283,5 +292,6 @@
 <script src="vendor/lenis.min.js"></script>
 <script src="vendor/qrcode.min.js"></script>
 <script src="js/main.js"></script>
+<script src="js/news.js"></script>
 </body>
 </html>

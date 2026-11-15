@@ -1,0 +1,151 @@
+# Pages CMS (https://app.pagescms.org): Eingabemasken für Farouk.
+# Jede Speicherung ist ein Commit auf main, die GitHub Action stellt ihn in ca. 1–2 Minuten online.
+# Die Felder werden von scripts/build-content.mjs gelesen. Wer hier Feldnamen ändert, muss das Skript mit anpassen.
+
+settings:
+  commit:
+    identity: user
+
+media:
+  name: news
+  label: Bilder für Meldungen
+  input: public/img/news
+  output: /img/news
+  extensions: [jpg, jpeg, png, webp]
+  rename: safe
+
+content:
+  - name: news
+    label: Aktuelles (Meldungen)
+    type: collection
+    path: content/news
+    format: json
+    filename:
+      template: "{year}-{month}-{day}-{titel_de}.json"
+      field: false
+    view:
+      fields: [titel_de, datum, projekt, sichtbar]
+      primary: titel_de
+      sort: [datum, titel_de]
+      default:
+        sort: datum
+        order: desc
+    fields:
+      - name: datum
+        label: Datum
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: projekt
+        label: Gehört zu
+        type: select
+        required: true
+        default: ffd
+        options:
+          values:
+            - name: ffd
+              label: FFD Production allgemein
+            - name: schweigen
+              label: Dem Schweigen so nah
+            - name: amar
+              label: Amar & Lena
+      - name: titel_de
+        label: Überschrift (Deutsch)
+        type: string
+        required: true
+        options:
+          maxlength: 120
+      - name: titel_en
+        label: Überschrift (Englisch)
+        type: string
+        required: true
+        options:
+          maxlength: 120
+      - name: text_de
+        label: Text (Deutsch)
+        description: Absätze mit einer Leerzeile trennen. Die ersten 3–4 Zeilen erscheinen auf der Startseite.
+        type: text
+        required: true
+        options:
+          maxlength: 2000
+      - name: text_en
+        label: Text (Englisch)
+        description: Absätze mit einer Leerzeile trennen.
+        type: text
+        required: true
+        options:
+          maxlength: 2000
+      - name: bild
+        label: Bild (optional)
+        description: Querformat wirkt am besten. Große Handyfotos werden beim Veröffentlichen automatisch verkleinert.
+        type: image
+        options:
+          media: news
+      - name: bild_text_de
+        label: Was ist auf dem Bild zu sehen? (Deutsch, nur wenn ein Bild gewählt ist)
+        description: Ein Satz für blinde Menschen und Suchmaschinen, z. B. „Simone Geißler und Farouk El-Khalili am Set“.
+        type: string
+      - name: bild_text_en
+        label: Was ist auf dem Bild zu sehen? (Englisch)
+        type: string
+      - name: link
+        label: Link (optional)
+        description: Zum Beispiel ein Presseartikel oder Festival. Muss mit https:// beginnen.
+        type: string
+        pattern:
+          regex: "^(https?://\\S+)?$"
+          message: Bitte eine vollständige Adresse mit https:// eingeben.
+      - name: sichtbar
+        label: Auf der Website anzeigen
+        description: Ausschalten, um eine Meldung zu verstecken, ohne sie zu löschen.
+        type: boolean
+        default: true
+
+  - name: crowdfunding
+    label: Crowdfunding „Dem Schweigen so nah“
+    type: file
+    path: content/crowdfunding.json
+    format: json
+    fields:
+      - name: status
+        label: Phase (Anzeige oben rechts im Kasten)
+        type: select
+        required: true
+        options:
+          values:
+            - name: vorproduktion
+              label: Vorproduktion
+            - name: crowdfunding
+              label: Crowdfunding läuft
+            - name: dreh
+              label: Dreharbeiten
+            - name: post
+              label: Postproduktion
+            - name: fertig
+              label: Finanzierung abgeschlossen
+      - name: ziel
+        label: Finanzierungsziel in Euro
+        type: number
+        required: true
+        options:
+          min: 0
+      - name: gesammelt
+        label: Bereits gesammelt in Euro
+        description: Bei 0 werden Betrag und Fortschrittsbalken nicht angezeigt.
+        type: number
+        required: true
+        options:
+          min: 0
+      - name: unterstuetzende
+        label: Anzahl Unterstützer:innen (optional)
+        description: Leer lassen oder 0, wenn die Zahl nicht angezeigt werden soll.
+        type: number
+        options:
+          min: 0
+      - name: stand
+        label: Stand vom
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
