@@ -72,3 +72,21 @@ Vorschau eines Branches (ohne live zu gehen): dasselbe mit `--branch <name>`, er
 - Das Quellmaterial liegt außerhalb dieses Repos (`../WEBSITE FFD & DEM SCHWEIGEN SO NAH`) und enthält Kontodaten. Nie in dieses Repo kopieren, nur fertige Web-Bilder nach `public/img/`.
 - Neue Bilder als JPG, Breite max. ca. 1800 px, möglichst unter 250 KB.
 - Commit-Nachrichten auf Deutsch.
+
+## Design-Workflow
+
+Die Design-Skills liegen projektweit in `.claude/skills/`, der Befehl `/critique-screen` in `.claude/commands/`. Herkunft und Lizenzen: `.claude/skills/THIRD_PARTY.md`. Die Skills sind unverändert übernommen; wo sie unserem Stack widersprechen, gilt diese Datei.
+
+1. **Neue Gestaltung oder Animation:** `build-awwwards-quality-sites` als Leitskill, `cinematic-gsap-lenis-motion-system` für Scroll und Bewegung, `build-threejs-scroll-worlds` nur für 3D-Szenen. Genau eine Smooth-Scroll-Bibliothek: Lenis.
+2. **Vor jedem Merge:** `/interface-review` auf den Branch bzw. PR.
+3. **Animations-Änderungen** zusätzlich mit `review-animations` prüfen. Für ein Gesamt-Audit `improve-animations` nutzen.
+4. **Nach dem Deploy der Cloudflare-Vorschau:** Screenshots Desktop (1440 px) und Mobil (390 px), dann `/critique-screen` darauf. Fixes nach P1–P3 abarbeiten.
+5. **Pflicht:** Die Einstellung „reduzierte Bewegung“ (`prefers-reduced-motion`) und eine Fassung ohne JavaScript/WebGL. Inhalte müssen ohne JS sichtbar bleiben (Animationen nur per `gsap.from`, nie per CSS vorab ausblenden).
+
+Abweichungen der Skills von unserem Stack:
+- Kein npm, kein Bundler. Die Skills zeigen `npm i gsap lenis` und `import …`; wir nutzen die lokalen Kopien in `public/vendor/` (GSAP/ScrollTrigger 3.12.5, Lenis 1.1.14) als `<script>`. Neue Bibliotheken ebenfalls lokal ablegen, nie per CDN (siehe „Keine externen Ressourcen“).
+- Lenis 1.1.14 kennt die Option `anchors` aus dem Skill-Beispiel nicht. Ankerlinks laufen bei uns über `lenis.scrollTo()` in `main.js`.
+- Tailwind-, React- und Motion-Beispiele (`better-*`, `animate`) gelten sinngemäß für unser reines CSS in `public/css/style.css`; Farben und Abstände über die Variablen in `:root`.
+- `build-awwwards-quality-sites` verbietet per Canvas gezeichnete Illustrationen. Unsere Canvas-Effekte (Logo, Staub, Sterne) sind bewusst so gestaltet und bleiben.
+- `critique-brand-consistency` erwartet `mood.md`, `voice.md` und `tokens.md`. Solange es die nicht gibt, prüft der Skill nur gegen `style.css`.
+- Texte immer zweisprachig ändern (siehe „Zweisprachigkeit“), auch wenn ein Skill nur eine Sprache vorschlägt.
