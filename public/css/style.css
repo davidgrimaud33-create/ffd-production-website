@@ -268,6 +268,42 @@ small{font-size:var(--fs-small)}
 .foot a{text-decoration:none}
 .foot a:hover{color:var(--text)}
 
+/* Vita Farouk: Reiter und Zeilen */
+.vita{display:grid;gap:var(--s-6)}
+.tabs{display:none;flex-wrap:wrap;gap:var(--s-3)}
+.js .tabs{display:flex}
+.tabs button{min-height:44px;padding:var(--s-2) var(--s-5);background:transparent;border:1px solid var(--gold);border-radius:var(--radius);color:var(--gold);font:600 var(--fs-label)/1.2 var(--sans);text-transform:uppercase;letter-spacing:.2em;transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease)}
+.tabs button:hover{background:var(--gold-soft)}
+.tabs button[aria-selected="true"]{background:var(--gold);color:var(--bg)}
+.vpanel{display:grid;gap:var(--s-4)}
+.vpanel+.vpanel{margin-top:var(--s-5)}
+.js .vpanel-h{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.vpanel-h{font-size:var(--fs-h3)}
+.vrow{display:grid;grid-template-columns:8rem minmax(0,1fr) minmax(0,1.2fr);gap:var(--s-5);padding-block:var(--s-4);border-top:1px solid var(--line);align-items:baseline}
+.vrow:last-child{border-bottom:1px solid var(--line)}
+.vrow-y{font-size:var(--fs-label);font-weight:600;text-transform:uppercase;letter-spacing:var(--track-label);color:var(--gold)}
+.vrow-t{font-weight:300;font-size:var(--fs-lede);line-height:1.3}
+.vrow-m{color:var(--muted);font-size:var(--fs-small)}
+.vita-more{display:grid;grid-template-columns:1fr auto;gap:var(--s-6);align-items:start;margin-top:var(--s-7)}
+.vita-edu{display:grid;gap:var(--s-2);max-width:48ch}
+.vita-links{display:grid;gap:var(--s-3);justify-items:start}
+.vita-links li{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-3)}
+@media (max-width:760px){
+  .vrow{grid-template-columns:1fr;gap:var(--s-1)}
+  .vita-more{grid-template-columns:1fr}
+}
+
+/* Kontakt */
+.contact-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:var(--s-5)}
+.contact-card{padding:var(--s-7) var(--s-6);gap:var(--s-5)}
+.contact-card .btn-row{margin-top:var(--s-2)}
+.contact-name{font-size:var(--fs-h3);font-weight:300;line-height:1.2}
+.contact-card .muted{font-size:var(--fs-label);letter-spacing:.2em;text-transform:uppercase}
+
+/* Impressum-Dialog */
+.imp{gap:var(--s-5)}
+.imp p{margin:0}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
 }

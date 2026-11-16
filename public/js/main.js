@@ -147,4 +147,33 @@ if(dI&&zoomImg&&dI.showModal){
   document.querySelectorAll('[data-zoom]').forEach(b=>b.addEventListener('click',()=>{
     const im=b.querySelector('img'); zoomImg.src=im.currentSrc||im.src; zoomImg.alt=im.alt; openDialog(dI) }));
 }
+
+/* Vita: Reiter (ARIA-Tabs). Ohne JS bleiben alle Bereiche sichtbar; `hidden` setzt erst dieses Skript. */
+const vtabs=[...document.querySelectorAll('#vita [role="tab"]')];
+if(vtabs.length){
+  const sel=(i,focus)=>vtabs.forEach((t,k)=>{
+    const on=k===i, p=document.getElementById(t.getAttribute('aria-controls'));
+    t.setAttribute('aria-selected',on); t.tabIndex=on?0:-1; if(p) p.hidden=!on;
+    if(on&&focus) t.focus();
+  });
+  sel(0);
+  vtabs.forEach((t,i)=>{
+    t.addEventListener('click',()=>sel(i));
+    t.addEventListener('keydown',e=>{
+      const n=vtabs.length, k={ArrowRight:(i+1)%n,ArrowLeft:(i+n-1)%n,Home:0,End:n-1}[e.key];
+      if(k===undefined) return; e.preventDefault(); sel(k,true);
+    });
+  });
+}
+
+/* Impressum-Dialog: Fußzeilenlink und Direktaufruf über #impressum (z. B. von der Datenschutzseite) */
+const dImp=document.getElementById('dlg-imp');
+if(dImp&&dImp.showModal){
+  bindDialog(dImp);
+  document.querySelectorAll('[data-open="imp"]').forEach(a=>a.addEventListener('click',e=>{
+    if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey) return;
+    e.preventDefault(); openDialog(dImp);
+  }));
+  if(location.hash==='#impressum') openDialog(dImp);
+}
 })();
