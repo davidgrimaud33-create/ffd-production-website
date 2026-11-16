@@ -217,13 +217,11 @@ small{font-size:var(--fs-small)}
 .laurel.is-nom .laurel-year,.laurel.is-nom .laurel-res,.laurel.is-nom .laurel-fest{color:var(--muted)}
 .stills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-4)}
 .stills .still{aspect-ratio:1200/499;height:auto}
-.credit{margin-top:calc(-1*var(--s-6))}
 @media (max-width:900px){
   .laurels{grid-template-columns:repeat(2,minmax(0,1fr))}
   .project-done{grid-template-columns:1fr;row-gap:var(--s-7)}
   .project-done .project-media{order:1;justify-self:start}
   .project-done .project-body{order:2}
-  .credit{margin-top:0}
 }
 @media (max-width:560px){
   .laurels{grid-template-columns:1fr}
@@ -332,7 +330,7 @@ small{font-size:var(--fs-small)}
 .split-photo{margin:0;display:grid;gap:var(--s-2)}
 .split-photo img{width:100%;height:auto;border-radius:var(--radius);background:var(--card)}
 .split-portrait .split-photo img{max-height:70vh;object-fit:cover;object-position:top}
-.credit{font-size:var(--fs-label);color:var(--muted);letter-spacing:.08em}
+.credit{margin-top:var(--s-2);font-size:var(--fs-label);color:var(--muted);letter-spacing:.08em}
 .keys{display:flex;flex-wrap:wrap;gap:var(--s-6);margin:0}
 .keys div{display:grid;gap:var(--s-1)}
 .keys dd{margin:0;font-size:var(--fs-lede)}
@@ -340,3 +338,21 @@ small{font-size:var(--fs-small)}
   .split,.split-portrait{grid-template-columns:1fr;gap:var(--s-6)}
   .split-portrait .split-photo img{max-height:60vh}
 }
+
+/* Rechtsseiten (impressum.html, datenschutz.html): schlichte Kopfzeile, ruhige Lesespalte */
+.top{padding-block:var(--s-5);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:var(--s-4)}
+.top .logo{font-weight:600;text-transform:uppercase;letter-spacing:var(--track-label);font-size:var(--fs-small);text-decoration:none}
+.top .back{text-decoration:none}
+.top .back:hover{color:var(--text)}
+.legal{padding-block:var(--s-9) var(--s-8)}
+.legal .in{max-width:46rem;display:grid;gap:var(--s-4)}
+.legal h1{font-size:clamp(2.25rem,1.4rem + 3vw,3.75rem);margin-block:var(--s-2) var(--s-5);hyphens:manual}
+.legal h2{font-size:var(--fs-h3);margin-top:var(--s-6)}
+.legal h3{font-size:var(--fs-lede);font-weight:600;letter-spacing:0;margin-top:var(--s-3)}
+.legal ul{list-style:disc;padding-left:1.25em;display:grid;gap:var(--s-1)}
+.legal li::marker{color:var(--gold)}
+.legal a{color:var(--gold)}
+.legal .stand{color:var(--muted);font-size:var(--fs-small);margin-top:var(--s-5)}
+.top .logo,.top .back{white-space:nowrap}
+@media (max-width:560px){.top .logo,.top .back{letter-spacing:.2em}}

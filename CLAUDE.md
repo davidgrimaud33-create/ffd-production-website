@@ -5,26 +5,38 @@ Kein Framework. Bearbeitet wird direkt in `public/`. Einziger Build-Schritt: `sc
 
 ## Aufbau
 
+Der Relaunch (Branch `relaunch`) ist ein One-Pager mit neun Abschnitten. Veröffentlicht wird weiterhin nur von `main` (siehe „Veröffentlichen“).
+
 ```
 public/            ← alles, was online geht
-  index.html       Startseite (One-Pager, alle Sektionen + Dialoge wie Impressum/Spenden)
-  news.html        Archiv aller Meldungen („Aktuelles“)
-  datenschutz.html Datenschutzerklärung (nur Deutsch, ohne main.js)
-  impressum.html   Impressum als eigene Seite (nur Deutsch, ohne main.js), Ausweichweg ohne JavaScript
-  css/fonts.css    Schriften (Lora, Inter, Oswald, Source Serif 4), Dateien in fonts/
-  css/style.css    gesamtes Styling, Farben als Variablen in :root
-  js/main.js       Animationen, Sprache DE/EN, Spenden-Dialog, QR-Code, Crowdfunding-Zahlen
-  js/news.js       Meldungen anzeigen (Startseite: 3 neueste, news.html: alle)
+  index.html       Startseite (One-Pager, alle Abschnitte + Dialoge: Projekt, Unterstützen, Impressum)
+  datenschutz.html Datenschutzerklärung (ohne main.js)
+  impressum.html   Impressum als eigene Seite (ohne main.js), Ausweichweg ohne JavaScript
+  css/fonts.css    Schrift: nur Inter (variabel), Dateien in fonts/ (Lora/Oswald/Source Serif liegen dort noch, werden nicht geladen)
+  css/style.css    gesamtes Styling, Farben und Maße als Variablen in :root (Rechtsseiten am Ende der Datei)
+  js/main.js       Scroll (Lenis), Punkt-Navigation, Animationen, Projekt- und Unterstützen-Dialog, QR-Code
+  js/news.js       Meldungen anzeigen (Abschnitt „News“)
   data/            ERZEUGT, nicht im Repo: news.json, crowdfunding.json
   img/news/        Bilder, die Farouk über das CMS hochlädt
   vendor/          GSAP, ScrollTrigger, Lenis, qrcode-generator (lokale Kopien)
   img/             Bilder als JPG (sprechende Dateinamen)
+tests/             Tests (node:test + playwright-core, Chrome über channel 'chrome'), Helfer in tests/helpers.mjs
 .github/workflows/deploy.yml   Build + Veröffentlichung zu Cloudflare Pages
-content/news/*.json            Meldungen (eine Datei pro Meldung, DE + EN), gepflegt über Pages CMS
+content/news/*.json            Meldungen (eine Datei pro Meldung), gepflegt über Pages CMS
 content/crowdfunding.json      Phase, Ziel, gesammelter Betrag, Unterstützer:innen, Stand
 scripts/build-content.mjs      content/ → public/data/ (prüft Pflichtfelder, Bildpfade, Links)
 .pages.yml                     Eingabemasken für Pages CMS
 ```
+
+Abschnitts-IDs in `index.html` (Reihenfolge): `intro`, `news`, `projekte`, `abgeschlossen`, `vita-ffd`, `geschichte`, `gruender`, `vita`, `kontakt`. Jeder Abschnitt hat unten einen Pfeil zum nächsten (der letzte führt nach oben zu `#intro`). Alte Anker (`#projekt`, `#aktuelles`, `#filme`, `#ueber`) werden auf die neuen umgeleitet.
+
+## Tests
+
+```
+node scripts/build-content.mjs
+cd tests && npm install && npm test
+```
+Vor den Tests einmal `build-content.mjs`, damit `public/data/` existiert. Die Tests starten selbst einen lokalen Server auf `public/`.
 
 ## Inhalte, die Farouk selbst pflegt (Pages CMS)
 
@@ -41,16 +53,12 @@ Jede Speicherung ist ein Commit auf `main` und geht über die GitHub Action auto
 Das Impressum ist ein Dialog auf der Startseite und lässt sich direkt über `index.html#impressum` öffnen. Der Footer-Link zeigt auf `impressum.html`; mit JavaScript öffnet sich stattdessen der Dialog.
 
 **Doppelt gepflegte Stellen (immer beide ändern):**
-- Impressum: Dialog `#dlg-imp` in `index.html` und `impressum.html`.
-- Kontodaten: `BANK` in `js/main.js` und der `<noscript>`-Block in `#projekt` in `index.html`.
-- Laufband: `TAPE` in `js/main.js` und der Text in `#track` in `index.html`.
+- Impressum: Dialog `#dlg-imp` in `index.html` und `impressum.html` (ein Test vergleicht die Absätze).
+- Kontodaten: `BANK` in `js/main.js` und der `<noscript>`-Block in `#projekte` in `index.html`.
 
-## Zweisprachigkeit (wichtig)
+## Zweisprachigkeit (derzeit ausgesetzt)
 
-Deutsch ist der Text im HTML. Englisch steht im Wörterbuch `EN` am Anfang von `public/js/main.js`.
-Der **Schlüssel ist der deutsche Text selbst** (Leerräume zusammengefasst).
-Wer einen deutschen Text im HTML ändert, muss den Schlüssel in `EN` genauso ändern und die englische Übersetzung anpassen. Sonst bleibt der Text auf Englisch deutsch.
-Das gilt auch für `alt`, `aria-label` und `data-cursor`.
+Derzeit ausgesetzt (Relaunch: nur Deutsch, EN-Entscheidung offen). Es gibt keinen Sprachumschalter und kein `EN`-Wörterbuch in `main.js`; Texte stehen nur auf Deutsch im HTML. Fällt die Entscheidung für Englisch, muss die Umschaltung neu geplant werden. Die Datenschutzerklärung (Abschnitt 3, Spracheinstellung) beschreibt noch den alten Umschalter und ist dann anzupassen oder zu streichen.
 
 ## Lokal ansehen
 
@@ -58,12 +66,12 @@ Das gilt auch für `alt`, `aria-label` und `data-cursor`.
 node scripts/build-content.mjs
 python3 -m http.server 8000 -d public
 ```
-Dann http://localhost:8000 öffnen. Nicht als Datei per Doppelklick öffnen, das Logo-Canvas braucht einen Server.
+Dann http://localhost:8000 öffnen. Nicht als Datei per Doppelklick öffnen (Skripte und Daten brauchen einen Server).
 
 ## Veröffentlichen
 
 1. Änderungen in `public/` machen und lokal prüfen.
-2. Commit auf `main`, dann `git push`.
+2. Der Relaunch lebt auf Branch `relaunch` (Vorschau per Notfall-Befehl mit `--branch relaunch`). Live geht er erst nach Merge auf `main` und `git push`.
 3. Die GitHub Action lädt `public/` zu Cloudflare Pages hoch (ca. 1 Minute).
 4. Prüfen: https://ffd-production-website.pages.dev
 
@@ -93,6 +101,5 @@ Abweichungen der Skills von unserem Stack:
 - Kein npm, kein Bundler. Die Skills zeigen `npm i gsap lenis` und `import …`; wir nutzen die lokalen Kopien in `public/vendor/` (GSAP/ScrollTrigger 3.12.5, Lenis 1.1.14) als `<script>`. Neue Bibliotheken ebenfalls lokal ablegen, nie per CDN (siehe „Keine externen Ressourcen“).
 - Lenis 1.1.14 kennt die Option `anchors` aus dem Skill-Beispiel nicht. Ankerlinks laufen bei uns über `lenis.scrollTo()` in `main.js`.
 - Tailwind-, React- und Motion-Beispiele (`better-*`, `animate`) gelten sinngemäß für unser reines CSS in `public/css/style.css`; Farben und Abstände über die Variablen in `:root`.
-- `build-awwwards-quality-sites` verbietet per Canvas gezeichnete Illustrationen. Unsere Canvas-Effekte (Logo, Staub, Sterne) sind bewusst so gestaltet und bleiben.
 - `critique-brand-consistency` erwartet `mood.md`, `voice.md` und `tokens.md`. Solange es die nicht gibt, prüft der Skill nur gegen `style.css`.
-- Texte immer zweisprachig ändern (siehe „Zweisprachigkeit“), auch wenn ein Skill nur eine Sprache vorschlägt.
+- Texte derzeit nur Deutsch (siehe „Zweisprachigkeit“).
