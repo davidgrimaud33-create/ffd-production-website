@@ -114,6 +114,12 @@ small{font-size:var(--fs-small)}
 .intro-logo{display:block;width:min(78vmin,860px,100%);text-decoration:none}
 .intro-logo img{width:100%;height:auto;mix-blend-mode:lighten;-webkit-mask-image:radial-gradient(closest-side,#000 55%,transparent);mask-image:radial-gradient(closest-side,#000 55%,transparent)}
 .intro-hint{margin:0}
+@media (min-width:761px){
+  /* Bild deutlich breiter als die Wortmarke (~35 %): groß darstellen, die leeren Bildränder per negativem Rand aus dem Layout nehmen,
+     damit Hinweis und Pfeil im ersten Bildschirm bleiben */
+  .sec-intro{overflow-x:clip}
+  .intro-logo{--lw:min(94vw,150svh,1500px);width:var(--lw);max-width:none;flex:none;margin-block:calc(var(--lw) * -.27)}
+}
 @media (max-width:760px){
   /* Wortmarke nimmt nur ~35 % der Bildbreite ein: Bild breiter als der Bildschirm, Ränder laufen über die Maske aus */
   .sec-intro{overflow-x:clip}

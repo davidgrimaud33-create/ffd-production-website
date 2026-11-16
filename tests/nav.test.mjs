@@ -41,6 +41,16 @@ test('intro logo large enough on mobile, no horizontal scroll', async () => {
   });
 });
 
+test('intro logo large on desktop, hint and arrow stay in view', async () => {
+  await withPage('/', { width: 1440, height: 900 }, async ({ page }) => {
+    const mark = await page.$eval('.intro-logo img', (i) => i.getBoundingClientRect().width * (490 / 1400));
+    assert.ok(mark >= 420 && mark <= 520, `Wortmarke ${Math.round(mark)} px`);
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'horizontales Scrollen');
+    const bottom = await page.$eval('#intro .next', (n) => n.getBoundingClientRect().bottom);
+    assert.ok(bottom <= 900, `Pfeil unter dem Bildschirmrand (${Math.round(bottom)} px)`);
+  });
+});
+
 test('dots hidden on intro, visible later', async () => {
   await withPage('/', {}, async ({ page }) => {
     assert.equal(await page.$$eval('.dots a', (a) => a.length), 8);
