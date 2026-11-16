@@ -8,16 +8,17 @@ const PROJ={ffd:['FFD Production','FFD Production'],schweigen:['Dem Schweigen so
 const date=s=>{ const [y,m,d]=s.split('-').map(Number); return new Date(Date.UTC(y,m-1,d)).toLocaleDateString(LANG==='en'?'en-GB':'de-DE',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}) };
 const el=(tag,cls,text)=>{ const e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e };
 
-function paragraphs(text){ const box=el('div','nw-text');
-  text.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean).forEach(par=>{ const p=el('p'); par.split('\n').forEach((line,i)=>{ if(i) p.appendChild(el('br')); p.appendChild(document.createTextNode(line)) }); box.appendChild(p) });
+// Startseite nur der erste Absatz: sonst setzt line-clamp „…“ direkt hinter einen Punkt („Berlin.…“)
+function paragraphs(text,first){ const box=el('div','nw-text');
+  text.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean).slice(0,first?1:Infinity).forEach(par=>{ const p=el('p'); par.split('\n').forEach((line,i)=>{ if(i) p.appendChild(el('br')); p.appendChild(document.createTextNode(line)) }); box.appendChild(p) });
   return box }
 
 function item(n,mode){ const t=(LANG==='en'&&n.en.titel&&n.en.text)?n.en:n.de;
   const a=el('article','nw'); a.id=n.id; if(n.bild) a.classList.add('has-img');
-  if(n.bild){ const f=el('div','nw-img'), im=el('img'); im.src=n.bild; im.alt=t.bild_text||''; im.loading='lazy'; im.decoding='async'; f.appendChild(im); a.appendChild(f) }
+  if(n.bild){ const f=el('div','nw-img'), im=el('img'); im.src=n.bild; im.alt=t.bild_text||''; im.loading='lazy'; im.decoding='async'; im.addEventListener('load',()=>f.classList.toggle('portrait',im.naturalHeight>im.naturalWidth)); f.appendChild(im); a.appendChild(f) }
   const body=el('div','nw-body');
   const meta=el('div','nw-meta label soft'); const tm=el('time',null,date(n.datum)); tm.dateTime=n.datum; meta.append(tm,el('span','nw-proj',L(...PROJ[n.projekt]||PROJ.ffd)));
-  body.append(meta, el(mode==='home'?'h3':'h2','nw-title',t.titel), paragraphs(t.text));
+  body.append(meta, el(mode==='home'?'h3':'h2','nw-title',t.titel), paragraphs(t.text,mode==='home'));
   const act=el('div','nw-act');
   if(mode==='home'){ const more=el('a','nw-more label',L('Weiterlesen','Read more')+' →'); more.href='news.html#'+n.id; act.appendChild(more) }
   if(n.link){ const ln=el('a','nw-more label',L('Mehr dazu','Find out more')+' ↗'); ln.href=n.link; ln.target='_blank'; ln.rel='noopener'; act.appendChild(ln) }

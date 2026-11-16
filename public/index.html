@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="css/style.css">
 <!-- Ohne JavaScript: Knöpfe ausblenden, die nur einen Dialog öffnen (Ersatz steht im Text) -->
 <noscript><style>button[data-open]{display:none}</style></noscript>
+<!-- Vorspann nur beim ersten Aufruf pro Sitzung -->
+<script>try{if(sessionStorage.getItem('ffd-intro'))document.documentElement.classList.add('seen');sessionStorage.setItem('ffd-intro','1')}catch(e){}</script>
 </head>
 <body>
 <div class="leader" aria-hidden="true"><div class="ld"><span class="ld-w"><b>FFD</b><i></i><span>Production</span></span><span class="ld-n label" id="ldn">0</span></div><span class="ld-bar"></span></div>
@@ -58,7 +60,8 @@
     <p class="quote">Geschichten, die bleiben.</p>
   </section>
 
-  <div class="tape" aria-hidden="true"><div class="track" id="track"></div></div>
+  <!-- Laufband: Text für die Fassung ohne JS, gleiche Begriffe wie TAPE in js/main.js -->
+  <div class="tape" aria-hidden="true"><div class="track" id="track"><span>Dem Schweigen so nah</span><span class="s">Produktion</span><span>Amar &amp; Lena</span><span class="s">Entwicklung</span><span>Geschichten, die bleiben</span><span class="s">Regie</span></div></div>
 
   <section class="band dark filmworld" id="projekt">
     <div class="wrap">
@@ -170,7 +173,7 @@
             <div class="vrow"><span class="y">2025</span><span>Camgaroo Award<small>Sonderpreis Liebe, Glaube, Hoffnung</small></span><span class="res nom">Nominiert</span></div>
           </div>
         </div>
-        <div class="actions"><a class="btn" href="https://youtu.be/1wVqmR_68P0" target="_blank" rel="noopener"><span class="dot"></span>Auf YouTube ansehen ↗</a></div>
+        <div class="actions"><a class="btn ghost" href="https://youtu.be/1wVqmR_68P0" target="_blank" rel="noopener"><span class="dot"></span>Auf YouTube ansehen ↗</a></div>
       </div>
     </div>
     <div class="stills">

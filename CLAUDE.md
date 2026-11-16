@@ -43,6 +43,7 @@ Das Impressum ist ein Dialog auf der Startseite und lässt sich direkt über `in
 **Doppelt gepflegte Stellen (immer beide ändern):**
 - Impressum: Dialog `#dlg-imp` in `index.html` und `impressum.html`.
 - Kontodaten: `BANK` in `js/main.js` und der `<noscript>`-Block in `#projekt` in `index.html`.
+- Laufband: `TAPE` in `js/main.js` und der Text in `#track` in `index.html`.
 
 ## Zweisprachigkeit (wichtig)
 

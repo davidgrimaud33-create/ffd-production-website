@@ -221,7 +221,7 @@ fetch('data/crowdfunding.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).c
   if(cf.gesammelt>0){ cntG.dataset.to=cf.gesammelt; cntG.textContent=fmt(cf.gesammelt); $('#cf-raised').hidden=false;
     const pct=Math.min(100,cf.gesammelt/cf.ziel*100), bar=$('#cf-bar'); bar.hidden=false; bar.setAttribute('role','img');
     bar.setAttribute('aria-label',en?`${Math.round(pct)} % of the funding goal reached`:`${Math.round(pct)} % des Finanzierungsziels erreicht`);
-    new IntersectionObserver((es,o)=>es.forEach(e=>{ if(e.isIntersecting){ bar.style.setProperty('--p',pct+'%'); o.disconnect() } })).observe(bar);
+    new IntersectionObserver((es,o)=>es.forEach(e=>{ if(e.isIntersecting){ bar.style.setProperty('--p',pct/100); o.disconnect() } })).observe(bar);
     const meta=[en?`${Math.round(pct)} % reached`:`${Math.round(pct)} % erreicht`];
     if(cf.unterstuetzende>0) meta.push(en?`${fmt(cf.unterstuetzende)} ${cf.unterstuetzende===1?'supporter':'supporters'}`:`${fmt(cf.unterstuetzende)} Unterstützer:innen`);
     if(cf.stand){ const [y,m,d]=cf.stand.split('-'); meta.push(en?`as of ${d}/${m}/${y}`:`Stand ${d}.${m}.${y}`) }
@@ -321,7 +321,7 @@ addEventListener('scroll',pillUpdate,{passive:true}); pillUpdate();
   const SRC={s:()=>$('.poster2 img').src,a:()=>$('.shot.poster img').src,z:()=>'img/zahra.jpg'};
   $$('.fg-row',wrap).forEach(r=>{ r.addEventListener('pointerenter',()=>{ $$('.fg-row',wrap).forEach(x=>x.classList.toggle('act',x===r)); wrap.classList.add('on');
       const k=r.dataset.pv; if(k){im.src=SRC[k](); im.hidden=false; tag.hidden=true} else {im.hidden=true; tag.hidden=false}
-      pv.style.top=(r.offsetTop+r.offsetHeight/2)+'px' }) });
+      pv.style.setProperty('--y',(r.offsetTop+r.offsetHeight/2)+'px') }) });
   wrap.addEventListener('pointerleave',()=>wrap.classList.remove('on')) })();
 
 /* ---------- Bildschleife ---------- */

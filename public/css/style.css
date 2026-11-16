@@ -54,6 +54,8 @@ h3.disp{font-size:clamp(1.5rem,2.6vw,2rem)}
 @keyframes blink{50%{opacity:.25}}
 
 /* Vorspann: Wortmarke, Zähler und eine Linie in Projektorlicht, danach hebt sich der Vorhang */
+/* Vorspann nur beim ersten Aufruf pro Sitzung (Klasse .seen setzt das Skript im <head>) */
+.seen .leader{display:none}
 .leader{position:fixed;inset:0;z-index:200;background:var(--ink);color:var(--paper);display:grid;place-items:center;pointer-events:none;animation:leaderOut .8s cubic-bezier(.8,0,.2,1) 1.35s forwards}
 .ld{display:grid;justify-items:center;gap:22px}
 .ld-w{display:flex;align-items:center;gap:18px;line-height:1}
@@ -68,10 +70,11 @@ h3.disp{font-size:clamp(1.5rem,2.6vw,2rem)}
 
 #grain{position:fixed;inset:-10%;pointer-events:none;z-index:150;opacity:.07;mix-blend-mode:multiply;background-size:160px 160px}
 
-.cursor{position:fixed;left:0;top:0;z-index:180;pointer-events:none;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--light);
-  display:none;place-items:center;transition:width .35s cubic-bezier(.2,.8,.2,1),height .35s cubic-bezier(.2,.8,.2,1),margin .35s cubic-bezier(.2,.8,.2,1)}
+/* Feste Größe 92px, klein per scale (12px): keine Layout-Neuberechnung beim Wachsen */
+.cursor{position:fixed;left:0;top:0;z-index:180;pointer-events:none;width:92px;height:92px;margin:-46px 0 0 -46px;border-radius:50%;background:var(--light);
+  display:none;place-items:center;scale:.13;transition:scale .35s cubic-bezier(.2,.8,.2,1)}
 .cursor span{font-family:var(--sans);font-weight:600;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);opacity:0;transition:opacity .2s;white-space:nowrap}
-.cursor.big{width:92px;height:92px;margin:-46px 0 0 -46px}
+.cursor.big{scale:1}
 .cursor.big span{opacity:1}
 @media (hover:hover) and (pointer:fine){.cursor{display:grid}}
 
@@ -155,7 +158,7 @@ nav.main a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.
 .vf .tl,.vf .br{position:absolute;display:flex;gap:8px;align-items:center;font-size:10.5px}
 .vf .tl{left:44px;top:14px}.vf .br{right:44px;bottom:14px}
 .vf button.br{pointer-events:auto;background:none;border:0;padding:4px 0;color:inherit;font-size:10.5px;opacity:.75}
-.vf button.br:hover{opacity:1}
+@media (hover:hover) and (pointer:fine){.vf button.br:hover{opacity:1}}
 .hero-top,.hero-foot{position:absolute;left:0;right:0}
 .hero-top{top:20px}.hero-foot{bottom:20px}
 .hero-top .wrap,.hero-foot .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -212,7 +215,7 @@ nav.main a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.
 .figs .label{font-size:10.5px;letter-spacing:.14em}
 .cf-figs{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
 .cf-bar{height:6px;background:var(--f-line);border-radius:3px;overflow:hidden}
-.cf-bar i{display:block;height:100%;width:var(--p,0%);background:var(--f-gold);border-radius:inherit;transition:width 1.8s cubic-bezier(.2,.8,.2,1)}
+.cf-bar i{display:block;height:100%;background:var(--f-gold);transform:scaleX(var(--p,0));transform-origin:left;transition:transform 1.8s cubic-bezier(.2,.8,.2,1)}
 .cf-meta{font-size:14px;color:var(--f-quiet);margin-top:-6px}
 .actions{display:flex;gap:12px;flex-wrap:wrap}
 /* Spendendaten ohne JavaScript (<noscript> in #projekt) */
@@ -273,12 +276,14 @@ nav.main a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.
 .block.news{padding-bottom:0}
 .block.news+.block{padding-top:clamp(56px,7vw,96px)}
 .nw-all{text-decoration:none}
-.nw-all:hover{color:var(--ink);box-shadow:inset 0 -1.5px var(--light)}
+@media (hover:hover) and (pointer:fine){.nw-all:hover{color:var(--ink);box-shadow:inset 0 -1.5px var(--light)}}
 .nw-list.home{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,40px)}
 @media (max-width:980px){.nw-list.home{grid-template-columns:repeat(2,minmax(0,1fr))}.nw-list.home .nw:nth-child(3){display:none}}
 @media (max-width:640px){.nw-list.home{grid-template-columns:1fr}.nw-list.home .nw:nth-child(3){display:grid}}
 .nw{display:grid;gap:16px;align-content:start;min-width:0}
 .nw-img{position:relative;aspect-ratio:3/2;background:var(--ink);overflow:hidden}
+/* Hochformat (z. B. Plakat) nicht anschneiden, sondern ganz zeigen (Klasse setzt news.js) */
+.nw-img.portrait img{object-fit:contain}
 .nw-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
 @media (hover:hover) and (pointer:fine){.nw:hover .nw-img img{transform:scale(1.04)}}
 .nw-body{display:grid;gap:12px;align-content:start;border-top:1px solid var(--ink);padding-top:12px}
@@ -291,7 +296,7 @@ nav.main a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.
 .nw-list.home .nw-text p+p{margin-top:12px}
 .nw-act{display:flex;flex-wrap:wrap;gap:8px 22px}
 .nw-more{text-decoration:none;font-size:11px;letter-spacing:.14em;padding-block:3px}
-.nw-more:hover{box-shadow:inset 0 -1.5px var(--light)}
+@media (hover:hover) and (pointer:fine){.nw-more:hover{box-shadow:inset 0 -1.5px var(--light)}}
 .nw-list.all{display:grid;border-top:1px solid var(--ink)}
 .nw-list.all .nw{grid-template-columns:minmax(0,1fr) minmax(0,320px);gap:16px clamp(24px,4vw,56px);padding:clamp(26px,4vw,44px) 0;border-bottom:1px solid var(--line);scroll-margin-top:calc(var(--head) + 20px)}
 .nw-list.all .nw .nw-img{order:2}
@@ -329,7 +334,9 @@ nav.main a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.
 #dlg-img img{display:block;width:100%;height:auto;max-height:calc(100vh - 120px);object-fit:contain}
 .film .info{display:grid;gap:26px;min-width:0}
 .yr{font-family:var(--serif);font-size:clamp(1.25rem,2vw,1.6rem);color:var(--petrol)}
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;background:var(--mist)}
+/* flex-wrap: die letzte Zeile füllt sich immer ganz, keine leere Zelle */
+.facts{display:flex;flex-wrap:wrap;background:var(--mist)}
+.facts div{flex:1 1 150px}
 .facts div{padding:16px 18px;border-right:1px solid var(--paper);border-bottom:1px solid var(--paper);display:grid;gap:4px;align-content:start;min-width:0}
 .facts .label{font-size:10.5px;letter-spacing:.16em;color:var(--asphalt)}
 
@@ -377,21 +384,25 @@ nav.main a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.
 /* Filmografie: Liste mit Vorschaubild */
 .fg{margin-top:clamp(64px,9vw,130px);display:grid;gap:18px}
 .fg-wrap{position:relative;border-top:1px solid var(--ink)}
-.fg-row{display:grid;grid-template-columns:120px minmax(0,1fr) minmax(0,auto);gap:10px 24px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:opacity .35s,padding .5s cubic-bezier(.2,.8,.2,1)}
+.fg-row{display:grid;grid-template-columns:120px minmax(0,1fr) minmax(0,auto);gap:10px 24px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:opacity .35s}
+.fg-row>*{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
 .fg-row .y{font-size:13px;font-variant-numeric:tabular-nums;color:var(--asphalt)}
+/* Verlinkte Zeilen erkennbar machen (auch auf Touch, wo es kein Vorschaubild gibt) */
+a.fg-row .t::after{content:" →"/"";font-family:var(--sans);font-weight:400;font-size:.55em;vertical-align:.3em;color:var(--asphalt)}
 .fg-row .t{font-family:var(--serif);font-weight:500;font-size:clamp(1.5rem,3.6vw,3rem);line-height:1.05;letter-spacing:-.012em}
 .fg-row .t small{font-family:var(--sans);font-weight:600;font-size:.3em;letter-spacing:.2em;vertical-align:.9em}
 .fg-row .k{font-size:14px;color:var(--asphalt);text-align:right}
 @media (max-width:760px){.fg-row{grid-template-columns:1fr}.fg-row .k{text-align:left}}
 @media (hover:hover) and (pointer:fine){
   .fg-wrap.on .fg-row{opacity:.28}
-  .fg-wrap.on .fg-row.act{opacity:1;padding-left:16px}
+  .fg-wrap.on .fg-row.act{opacity:1}
+  .fg-wrap.on .fg-row.act>*{transform:translateX(16px)}
   .fg-row{padding-right:calc(min(280px,22vw) + 28px)}
 }
-.fg-pv{position:absolute;right:0;top:0;width:min(280px,22vw);aspect-ratio:4/5;background:var(--ink);overflow:hidden;pointer-events:none;opacity:0;transform:translateY(-50%) scale(.92);transition:opacity .35s,transform .5s cubic-bezier(.2,.8,.2,1),top .55s cubic-bezier(.2,.8,.2,1);z-index:3;display:none}
+.fg-pv{position:absolute;right:0;top:0;width:min(280px,22vw);aspect-ratio:4/5;background:var(--ink);overflow:hidden;pointer-events:none;opacity:0;transform:translateY(calc(var(--y,0px) - 50%)) scale(.92);transition:opacity .35s,transform .5s cubic-bezier(.2,.8,.2,1);z-index:3;display:none}
 .fg-pv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .fg-pv .tag{position:absolute;left:12px;bottom:10px;color:var(--paper);font-size:10.5px}
-@media (hover:hover) and (pointer:fine){.fg-pv{display:block}.fg-wrap.on .fg-pv{opacity:1;transform:translateY(-50%) scale(1)}}
+@media (hover:hover) and (pointer:fine){.fg-pv{display:block}.fg-wrap.on .fg-pv{opacity:1;transform:translateY(calc(var(--y,0px) - 50%)) scale(1)}}
 
 /* Kontakt */
 .contact{background:var(--ink);color:var(--paper);padding-block:clamp(90px,12vw,170px) 0;overflow:hidden}
@@ -413,7 +424,7 @@ footer .label{font-size:10.5px;letter-spacing:.14em}
 
 /* Dialog */
 dialog{border:0;padding:0;background:var(--paper);color:var(--ink);width:min(960px,calc(100vw - 32px));max-height:calc(100vh - 40px);overflow:auto}
-dialog[open]{animation:clap .6s cubic-bezier(.2,.8,.2,1)}
+dialog[open]{animation:clap .45s cubic-bezier(.2,.8,.2,1)}
 @keyframes clap{from{clip-path:inset(48% 0 48% 0)}to{clip-path:inset(0)}}
 dialog::backdrop{background:rgba(22,23,26,.74)}
 .dh{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--paper);z-index:2}
@@ -455,4 +466,4 @@ dialog::backdrop{background:rgba(22,23,26,.74)}
 .legal a{text-underline-offset:3px}
 .legal .stand{color:var(--asphalt)}
 .back{text-decoration:none;font-size:11px;letter-spacing:.14em}
-.back:hover{box-shadow:inset 0 -1.5px var(--light)}
+@media (hover:hover) and (pointer:fine){.back:hover{box-shadow:inset 0 -1.5px var(--light)}}
