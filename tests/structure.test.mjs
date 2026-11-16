@@ -115,3 +115,34 @@ test('no spenden', async () => {
     assert.doesNotMatch(text, /spend/i);
   });
 });
+
+test('every content section has exactly one h2 (the section label)', async () => {
+  await withPage('/', {}, async ({ page }) => {
+    const res = await page.$$eval('main > section:not(#intro)', (s) => s.map((x) => ({
+      id: x.id, n: x.querySelectorAll('h2').length, label: x.querySelector('h2')?.classList.contains('label'),
+      first: x.querySelector('h1,h2,h3,h4')?.tagName,
+    })));
+    assert.equal(res.length, 8);
+    for (const r of res) {
+      assert.equal(r.n, 1, `#${r.id}: ${r.n} h2`);
+      assert.ok(r.label, `#${r.id}: h2 ist nicht das Abschnitts-Label`);
+      assert.equal(r.first, 'H2', `#${r.id}: erste Überschrift ${r.first}`);
+    }
+    // keine Ebene übersprungen (h2 → h4 ohne h3)
+    const skips = await page.$$eval('main h1, main h2, main h3, main h4', (hs) => {
+      const out = []; let prev = 1;
+      for (const h of hs) { const l = +h.tagName[1]; if (l > prev + 1) out.push(h.textContent.trim()); prev = l; }
+      return out;
+    });
+    assert.deepEqual(skips, []);
+  });
+});
+
+test('no placeholder links that jump to top', async () => {
+  await withPage('/', {}, async ({ page }) => {
+    assert.equal(await page.$$eval('a[href="#"]', (a) => a.length), 0);
+    const ph = await page.$$eval('#vita .is-placeholder', (e) => e.map((x) => ({ tag: x.tagName, dis: x.getAttribute('aria-disabled'), t: x.textContent })));
+    assert.equal(ph.length, 2);
+    for (const p of ph) { assert.equal(p.tag, 'SPAN'); assert.equal(p.dis, 'true'); assert.match(p.t, /\[URL liefert Farouk\]/); }
+  });
+});

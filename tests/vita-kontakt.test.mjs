@@ -53,8 +53,17 @@ test('ausbildung', async () => {
   });
 });
 
+test('vita AMAR & LENA credits', async () => {
+  await withPage(async (page) => {
+    const row = page.locator('#vita .vrow', { hasText: 'AMAR & LENA' });
+    assert.equal(await row.count(), 1);
+    assert.match(await row.textContent(), /Regie: Peter Klomfass, Frieda Yovogan/);
+  });
+});
+
 test('contact cards', async () => {
   await withPage(async (page) => {
+    assert.match(await page.locator('#kontakt .contact-card:nth-child(1)').textContent(), /Für Produktion, Kooperationen und Presse/);
     assert.equal(await page.locator('#kontakt .contact-card').count(), 2);
     assert.equal(await page.locator('#kontakt .contact-card:nth-child(1) a[href="mailto:ffd_production@t-online.de"]').count() >= 1, true);
     const right = page.locator('#kontakt .contact-card:nth-child(2)');

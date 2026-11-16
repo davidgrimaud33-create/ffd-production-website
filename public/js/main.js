@@ -22,7 +22,14 @@ function go(id,immediate){
   else el.scrollIntoView({behavior:(reduce||immediate)?'auto':'smooth',block:'start'});
   return true;
 }
-function scrollToId(id){ go(id,false) }
+/* Abschnitts-Navigation (Pfeile, Punkte, Menü): scrollen und den Fokus auf den Abschnitt setzen,
+   damit Tastatur und Screenreader dort weitermachen. tabindex=-1: fokussierbar, aber nicht in der Tab-Reihenfolge. */
+function scrollToId(id){
+  if(!go(id,false)) return;
+  const el=document.getElementById(id);
+  if(!el.hasAttribute('tabindex')) el.setAttribute('tabindex','-1');
+  el.focus({preventScroll:true});
+}
 
 window.FFD=Object.assign(window.FFD||{},{scrollToId,lenis,reduce});
 
@@ -78,11 +85,13 @@ if(dots&&window.IntersectionObserver){
 /* Mobiles Menü: Dialog, Lenis während der Anzeige anhalten */
 const menu=document.getElementById('menu'), menuBtn=document.querySelector('.menu-btn');
 if(menu&&menuBtn&&menu.showModal){
+  /* Fokus zurück auf den Menü-Knopf nur bei Esc oder „Schließen“; nach einem Link-Klick bekommt der Ziel-Abschnitt den Fokus. */
+  let refocus=true;
   const closeMenu=()=>{ if(menu.open){ menu.close(); window.FFD.lenis?.start() } };
   menuBtn.addEventListener('click',()=>{ menu.showModal(); menuBtn.setAttribute('aria-expanded','true'); window.FFD.lenis?.stop() });
-  menu.addEventListener('close',()=>{ menuBtn.setAttribute('aria-expanded','false'); window.FFD.lenis?.start(); menuBtn.focus({preventScroll:true}) });
+  menu.addEventListener('close',()=>{ menuBtn.setAttribute('aria-expanded','false'); window.FFD.lenis?.start(); if(refocus) menuBtn.focus({preventScroll:true}); refocus=true });
   menu.querySelector('.menu-close').addEventListener('click',closeMenu);
-  menu.addEventListener('click',e=>{ if(e.target.closest('a[href^="#"]')){ closeMenu() } });
+  menu.addEventListener('click',e=>{ if(e.target.closest('a[href^="#"]')){ refocus=false; closeMenu() } });
   matchMedia('(min-width:761px)').addEventListener('change',e=>{ if(e.matches) closeMenu() });
 }
 /* Finanzierung: Zahlen aus data/crowdfunding.json (gepflegt über Pages CMS). Ohne Daten bleibt der statische Text stehen. */

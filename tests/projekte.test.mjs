@@ -11,7 +11,8 @@ after(async () => { await srv.close(); });
 
 // BANK aus dem alten main.js (Quelle der Wahrheit für die Kontodaten)
 const OLD = execSync('git show main:public/js/main.js', { cwd: new URL('..', import.meta.url).pathname, encoding: 'utf8' });
-const BANK = { iban: OLD.match(/const BANK=\{[^}]*iban:'([^']+)'/)[1] };
+const pick = (k) => OLD.match(new RegExp(`const BANK=\\{[^}]*${k}:'([^']+)'`))[1];
+const BANK = { name: pick('name'), iban: pick('iban'), ref: pick('ref') };
 
 const cf = (o = {}) => ({ status: 'vorproduktion', ziel: 7500, gesammelt: 0, unterstuetzende: 0, stand: '2026-11-15', ...o });
 
@@ -47,11 +48,30 @@ test('support dialog', async () => {
   await withCf(cf(), async (page) => {
     await page.click('[data-open="bank"]');
     await page.waitForSelector('#dlg-bank[open]');
+    assert.equal(await page.$eval('#b-name', (e) => e.textContent.trim()), BANK.name);
     assert.equal(await page.$eval('#b-iban', (e) => e.textContent.trim()), BANK.iban);
+    assert.equal(await page.$eval('#b-ref', (e) => e.textContent.trim()), BANK.ref);
     await page.waitForSelector('#qr svg');
     assert.ok(await page.$('#dlg-bank a[href^="https://paypal.me/"]'));
     await page.keyboard.press('Escape');
     await page.waitForFunction(() => !document.querySelector('#dlg-bank').open);
+  });
+});
+
+test('dialog fields at 1440: label above value, IBAN on one line', async () => {
+  await withCf(cf(), async (page) => {
+    await page.click('[data-open="bank"]');
+    await page.waitForSelector('#dlg-bank[open]');
+    const r = await page.$$eval('#dlg-bank .bank .f', (fs) => fs.map((f) => {
+      const dt = f.querySelector('dt').getBoundingClientRect(), dd = f.querySelector('dd');
+      const range = document.createRange(); range.selectNodeContents(dd);
+      const lines = new Set([...range.getClientRects()].map((x) => Math.round(x.top))).size;
+      return { id: dd.id, labelAbove: dt.bottom <= dd.getBoundingClientRect().top + 1, lines };
+    }));
+    assert.equal(r.length, 3);
+    for (const f of r) assert.ok(f.labelAbove, `Label über Wert: ${f.id}`);
+    assert.equal(r.find((f) => f.id === 'b-iban').lines, 1, 'IBAN in einer Zeile');
+    assert.equal(r.find((f) => f.id === 'b-name').lines, 1, 'Kontoinhaber in einer Zeile');
   });
 });
 
@@ -71,6 +91,8 @@ test('hotline and texts', async () => {
     const t = await o.page.$eval('#projekte', (e) => e.innerText);
     assert.ok(t.includes('116 016'));
     assert.ok(t.includes('Dem Schweigen so nah'));
+    assert.match(await o.page.$eval('#projekte .project-byline', (e) => e.textContent), /^Kurzfilm · Arbeitstitel · /);
+    assert.ok(!t.includes('Kurzfilm (AT)'));
     assert.equal(await o.page.$$eval('#projekte article.project[data-project="schweigen"] .project-media img', (a) => a.length), 1);
     for (const c of ['.project-body', '.project-meta', '.project-team']) assert.equal(await o.page.$$eval('#projekte ' + c, (a) => a.length), 1, c);
     const body = await o.page.$eval('body', (e) => e.innerText + ' ' + [...document.querySelectorAll('[aria-label],[alt],[title]')].map((x) => x.getAttribute('aria-label') + x.alt + x.title).join(' '));
@@ -83,7 +105,9 @@ test('no-JS bank', async () => {
   const o = await openPage(srv.url + '/', { js: false });
   try {
     const t = await o.page.$eval('#projekte', (e) => e.innerText);
+    assert.ok(t.includes(BANK.name), 'Kontoinhaber ohne JS');
     assert.ok(t.includes(BANK.iban), 'IBAN ohne JS');
+    assert.ok(t.includes(BANK.ref), 'Verwendungszweck ohne JS');
     assert.ok(!/spende/i.test(t));
   } finally { await o.browser.close(); }
 });

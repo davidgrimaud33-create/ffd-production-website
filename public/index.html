@@ -15,7 +15,6 @@
 <script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
-<!-- Gerüst des Relaunchs (Task 1). Inhalte der Abschnitte werden in den folgenden Schritten gefüllt. -->
 </head>
 <body>
 <nav class="dots" aria-label="Abschnitte"><a href="#news" aria-label="News"><span class="dot-label">News</span></a><a href="#projekte" aria-label="Projekte"><span class="dot-label">Projekte</span></a><a href="#abgeschlossen" aria-label="Abgeschlossen"><span class="dot-label">Abgeschlossen</span></a><a href="#vita-ffd" aria-label="Vita FFD"><span class="dot-label">Vita FFD</span></a><a href="#geschichte" aria-label="Geschichte"><span class="dot-label">Geschichte</span></a><a href="#gruender" aria-label="Gründer"><span class="dot-label">Gründer</span></a><a href="#vita" aria-label="Vita"><span class="dot-label">Vita</span></a><a href="#kontakt" aria-label="Kontakt"><span class="dot-label">Kontakt</span></a></nav>
@@ -38,7 +37,7 @@
 
   <section id="news" class="sec" data-label="News">
     <div class="wrap sec-body">
-      <header class="sec-head"><span class="label">01 · News</span><h2 class="title">News</h2></header>
+      <header class="sec-head"><h2 class="label">01 · News</h2><p class="title" aria-hidden="true">News</p></header>
       <div class="feed" data-news data-limit="3"></div>
       <noscript><p class="muted">Die aktuellen Meldungen werden mit JavaScript geladen.</p></noscript>
     </div>
@@ -47,15 +46,15 @@
 
   <section id="projekte" class="sec" data-label="Projekte">
     <div class="wrap sec-body">
-      <header class="sec-head"><span class="label">02 · Aktuelle Projekte</span></header>
+      <header class="sec-head"><h2 class="label">02 · Aktuelle Projekte</h2></header>
       <article class="project" data-project="schweigen">
         <figure class="project-media frame">
           <img src="img/plakat-dem-schweigen-so-nah.jpg" alt="Plakat Dem Schweigen so nah: eine weiße Rose mit Blutspuren auf einem Steinboden, dahinter fällt Licht durch eine angelehnte Tür" width="820" height="1230">
         </figure>
         <div class="project-body">
           <header class="project-head">
-            <h2 class="title project-title">Dem <span class="rot">Schweigen</span> so nah</h2>
-            <p class="project-byline">Kurzfilm (AT) · von Farouk El-Khalili &amp; Simone Geißler</p>
+            <h3 class="title project-title">Dem <span class="rot">Schweigen</span> so nah</h3>
+            <p class="project-byline">Kurzfilm · Arbeitstitel · von Farouk El-Khalili &amp; Simone Geißler</p>
             <p class="project-status label"><span id="cf-status">In Vorproduktion</span></p>
           </header>
           <p class="lede project-lede">Als eine Polizistin ins Haus eines langjährigen Familienfreundes gerufen wird, glaubt sie an dessen Ehefrau Spuren von Misshandlung zu sehen. Kann sie ihrem Instinkt trauen oder steigert sie sich rein, weil sie an das familiäre Trauma erinnert wird, dem sie selbst schon einmal entkommen musste?</p>
@@ -116,11 +115,11 @@
       <symbol id="laurel-branch" viewBox="0 0 28 72"><path d="M22 70C9 58 5 34 12 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><g fill="currentColor"><path d="M20 62c-1-5 2-9 7-10-1 5-3 9-7 10z"/><path d="M15 60c-5-1-9-4-9-9 5 0 9 3 9 9z"/><path d="M14 50c0-5 3-9 8-10 0 5-3 9-8 10z"/><path d="M10 47C6 45 3 41 4 36c5 1 7 5 6 11z"/><path d="M10 36c1-5 4-8 9-8-1 5-4 8-9 8z"/><path d="M8 32C4 29 3 25 5 20c4 2 5 7 3 12z"/><path d="M9 22c2-4 5-7 10-6-2 4-5 7-10 6z"/><path d="M10 14C7 11 7 7 9 3c3 3 3 7 1 11z"/></g></symbol>
     </defs></svg>
     <div class="wrap sec-body">
-      <header class="sec-head"><span class="label">03 · Abgeschlossene Projekte</span></header>
+      <header class="sec-head"><h2 class="label">03 · Abgeschlossene Projekte</h2></header>
       <article class="project project-done" data-project="amar">
         <div class="project-body">
           <header class="project-head">
-            <h2 class="title project-title">Amar &amp; Lena</h2>
+            <h3 class="title project-title">AMAR &amp; LENA</h3>
             <p class="project-byline">Kurzfilm · 2024 · 15:15 Min.</p>
           </header>
           <p class="lede project-lede">Farouk El-Khalili spielt Amar und war als Produzent und Co-Autor beteiligt. Der Film wurde international auf Festivals präsentiert und mehrfach ausgezeichnet.</p>
@@ -189,7 +188,7 @@
 
   <section id="vita-ffd" class="sec" data-label="Vita FFD">
     <div class="wrap sec-body">
-      <header class="sec-head"><span class="label">04 · Vita FFD Production</span><h2 class="title">Vita FFD Production</h2></header>
+      <header class="sec-head"><h2 class="label">04 · Vita FFD Production</h2><p class="title" aria-hidden="true">Vita FFD Production</p></header>
       <ol class="timeline">
         <li>
           <span class="tl-year">In Arbeit</span>
@@ -215,10 +214,10 @@
 
   <section id="geschichte" class="sec" data-label="Geschichte">
     <div class="wrap sec-body">
-      <header class="sec-head"><span class="label">05 · Geschichte</span></header>
-      <div class="split">
-        <div class="split-text">
-          <blockquote class="quote"><p>Geschichten, die bleiben.</p></blockquote>
+      <header class="sec-head"><h2 class="label">05 · Geschichte</h2></header>
+      <div class="story">
+        <blockquote class="quote"><p>Geschichten, die bleiben.</p></blockquote>
+        <div class="story-body">
           <div class="prose">
             <p>FFD Production wurde 2022 von dem Berliner Schauspieler, Autor und Produzenten Farouk El-Khalili gegründet. Die unabhängige Produktionsfirma mit Sitz in Berlin entwickelt und realisiert eigene Filmprojekte mit einem besonderen Fokus auf gesellschaftlich relevante Stoffe und eine persönliche, charakterorientierte Erzählweise.</p>
             <p>Mit dem Kurzfilm AMAR &amp; LENA (2024) realisierte FFD Production eine erste eigene Produktion. Der Film wurde international auf Festivals präsentiert und mehrfach ausgezeichnet. Aktuell entsteht der Kurzspielfilm Dem Schweigen so nah (AT).</p>
@@ -230,10 +229,6 @@
             <div><dt class="label">Verband</dt><dd>BFFS</dd></div>
           </dl>
         </div>
-        <figure class="split-photo">
-          <img src="img/farouk-halbprofil.jpg" alt="Farouk El-Khalili im Halbprofil vor dunklem Hintergrund" width="500" height="500" loading="lazy" decoding="async">
-          <figcaption class="credit">Foto: Ronny Wunderlich</figcaption>
-        </figure>
       </div>
     </div>
     <a class="next" href="#gruender"><span>Der Gründer</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v15M5 12l7 7 7-7"/></svg></a>
@@ -241,14 +236,14 @@
 
   <section id="gruender" class="sec" data-label="Gründer">
     <div class="wrap sec-body">
-      <header class="sec-head"><span class="label">06 · Der Gründer</span></header>
+      <header class="sec-head"><h2 class="label">06 · Der Gründer</h2></header>
       <div class="split split-portrait">
         <figure class="split-photo">
           <img src="img/farouk-portraet-gross.jpg" alt="Porträt Farouk El-Khalili in schwarzer Lederjacke, mit offenem Haar und ernstem Blick" width="880" height="1100" loading="lazy" decoding="async">
           <figcaption class="credit">Foto: Ronny Wunderlich</figcaption>
         </figure>
         <div class="split-text">
-          <h2 class="title">Farouk El-Khalili</h2>
+          <h3 class="title">Farouk El-Khalili</h3>
           <p class="label muted">Schauspieler · Autor · Produzent</p>
           <div class="prose">
             <p>Farouk El-Khalili, 1981 in Berlin geboren, studierte Schauspiel am Berlin Acting Studio. Er arbeitet als Schauspieler, Model, Moderator und Sprecher für Film, Fernsehen und Theater.</p>
@@ -263,18 +258,18 @@
 
   <section id="vita" class="sec" data-label="Vita">
     <div class="wrap sec-body">
-      <header class="sec-head"><span class="label">07 · Vita</span><h2 class="title">Vita Farouk El-Khalili</h2></header>
+      <header class="sec-head"><h2 class="label">07 · Vita</h2><h3 class="title">Vita Farouk El-Khalili</h3></header>
       <div class="vita">
         <div class="tabs" role="tablist" aria-label="Vita nach Bereich"><button type="button" role="tab" id="vita-t-0" aria-controls="vita-p-0" aria-selected="true" tabindex="0">Film</button><button type="button" role="tab" id="vita-t-1" aria-controls="vita-p-1" aria-selected="false" tabindex="-1">Fernsehen</button><button type="button" role="tab" id="vita-t-2" aria-controls="vita-p-2" aria-selected="false" tabindex="-1">Theater</button></div>
         <div role="tabpanel" id="vita-p-0" aria-labelledby="vita-t-0" class="vpanel">
-          <h3 class="vpanel-h">Film</h3>
+          <h4 class="vpanel-h">Film</h4>
           <ul class="vlist">
-            <li class="vrow"><span class="vrow-y">2024</span><span class="vrow-t">Amar &amp; Lena</span><span class="vrow-m">Kurzfilm · FFD Production · Regie: Peter Klomfass</span></li>
+            <li class="vrow"><span class="vrow-y">2024</span><span class="vrow-t">AMAR &amp; LENA</span><span class="vrow-m">Kurzfilm · FFD Production · Regie: Peter Klomfass, Frieda Yovogan</span></li> <!-- TODO Credits von Farouk bestätigen -->
             <li class="vrow"><span class="vrow-y">2019</span><span class="vrow-t">Berlin, Berlin – Der Film</span><span class="vrow-m">Kino · ARD · Regie: Franziska Meyer Price</span></li>
           </ul>
         </div>
         <div role="tabpanel" id="vita-p-1" aria-labelledby="vita-t-1" class="vpanel">
-          <h3 class="vpanel-h">Fernsehen</h3>
+          <h4 class="vpanel-h">Fernsehen</h4>
           <ul class="vlist">
             <li class="vrow"><span class="vrow-y">2024–2025</span><span class="vrow-t">High Stakes</span><span class="vrow-m">ZDF / Odeon Fiction · Regie: Marijana Verhoef</span></li>
             <li class="vrow"><span class="vrow-y">2019</span><span class="vrow-t">SOKO Stuttgart</span><span class="vrow-m">Serie · ZDF</span></li>
@@ -283,7 +278,7 @@
           </ul>
         </div>
         <div role="tabpanel" id="vita-p-2" aria-labelledby="vita-t-2" class="vpanel">
-          <h3 class="vpanel-h">Theater</h3>
+          <h4 class="vpanel-h">Theater</h4>
           <ul class="vlist">
             <li class="vrow"><span class="vrow-y">2026</span><span class="vrow-t">Likedeeler</span><span class="vrow-m">Störtebeker Festspiele</span></li>
             <li class="vrow"><span class="vrow-y">2025</span><span class="vrow-t">Aus dem Nichts</span><span class="vrow-m">Theater der Altmark, Stendal</span></li>
@@ -300,10 +295,10 @@
           <p>Schauspielstudium am Berlin Acting Studio. Mitglied im BFFS (Bundesverband Schauspiel).</p>
         </div>
         <ul class="vita-links">
-          <li><a href="#" class="btn-ghost">Showreel ansehen</a> <span class="muted">[URL liefert Farouk]</span></li>
-          <li><a href="#" class="btn-ghost">Agentur-Profil ansehen</a> <span class="muted">[URL liefert Farouk]</span></li>
+          <li><span class="btn-ghost is-placeholder" aria-disabled="true">Showreel ansehen [URL liefert Farouk]</span></li>
+          <li><span class="btn-ghost is-placeholder" aria-disabled="true">Agentur-Profil ansehen [URL liefert Farouk]</span></li>
         </ul>
-        <!-- TODO: Showreel- und Agentur-Profil-URL von Farouk einsetzen (href="#" ersetzen). -->
+        <!-- TODO: Showreel- und Agentur-Profil-URL von Farouk einsetzen (Platzhalter-<span> durch <a class="btn-ghost" href="…" target="_blank" rel="noopener"> ersetzen). -->
       </div>
     </div>
     <a class="next" href="#kontakt"><span>Kontakt</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v15M5 12l7 7 7-7"/></svg></a>
@@ -311,11 +306,12 @@
 
   <section id="kontakt" class="sec" data-label="Kontakt">
     <div class="wrap sec-body">
-      <header class="sec-head"><span class="label">08 · Kontakt</span><h2 class="title">Kontakt</h2></header>
+      <header class="sec-head"><h2 class="label">08 · Kontakt</h2><p class="title" aria-hidden="true">Kontakt</p></header>
       <div class="contact-cards">
         <div class="contact-card card">
           <span class="label">FFD Production</span>
           <p class="contact-name">Farouk El-Khalili</p>
+          <p class="contact-role">Für Produktion, Kooperationen und Presse</p>
           <p><span class="muted">E-Mail</span><br><a href="mailto:ffd_production@t-online.de">ffd_production@t-online.de</a></p>
           <p><span class="muted">Telefon</span><br><a href="tel:+4915203408257">+49 1520 3408257</a></p>
           <p><span class="muted">Anschrift</span><br>Atzpodienstr. 12A<br>10365 Berlin</p>
@@ -388,8 +384,8 @@
 </dialog>
 
 <dialog id="dlg-img" class="dlg dlg-img" aria-label="Bild in groß">
-  <div class="dlg-head"><span class="label">Amar &amp; Lena</span><button class="dlg-x" type="button" data-close>Schließen</button></div>
-  <img id="zoom" src="" alt="">
+  <div class="dlg-head"><span class="label">AMAR &amp; LENA</span><button class="dlg-x" type="button" data-close>Schließen</button></div>
+  <img id="zoom" alt="">
 </dialog>
 
 <script src="vendor/gsap.min.js" defer></script>

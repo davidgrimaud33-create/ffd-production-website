@@ -58,6 +58,27 @@ test('no image placeholder', async () => {
   });
 });
 
+test('image and link', async () => {
+  await withNews([mk(0, { bild: 'img/zahra.jpg', link: 'https://example.org/x', de: { titel: 'Mit Bild', text: 'T', bild_text: 'Standbild Zahra' } })], async (page) => {
+    await page.waitForSelector('.nw');
+    assert.equal(await page.$$eval('.nw.has-img', (e) => e.length), 1);
+    const img = await page.$eval('.nw-img img[alt]', (i) => ({ alt: i.alt, loading: i.getAttribute('loading'), decoding: i.getAttribute('decoding'), ar: getComputedStyle(i).aspectRatio, fit: getComputedStyle(i).objectFit }));
+    assert.equal(img.alt, 'Standbild Zahra');
+    assert.equal(img.loading, 'lazy');
+    assert.equal(img.decoding, 'async');
+    assert.equal(img.ar, '4 / 3');
+    assert.equal(img.fit, 'cover');
+    assert.equal(await page.$$eval('a.nw-more[target="_blank"][rel~="noopener"][href="https://example.org/x"]', (a) => a.length), 1);
+  });
+});
+
+test('entries without date are skipped', async () => {
+  await withNews([mk(0), null, { ...mk(1), datum: '' }, mk(2)], async (page) => {
+    await page.waitForSelector('.nw');
+    assert.equal(await page.$$eval('.nw', (e) => e.length), 2);
+  });
+});
+
 test('empty list and 404', async () => {
   for (const [fx, st] of [[[], 200], [null, 404]]) {
     await withNews(fx, async (page) => {

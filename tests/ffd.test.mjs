@@ -48,6 +48,7 @@ test('geschichte', async () => {
     assert.match(t, /2022/);
     assert.match(t, /Berlin/);
     assert.match(t, /\[[^\]]*FFD[^\]]*\]/);
+    assert.equal(await page.locator('#geschichte img').count(), 0, 'kein Porträt in Geschichte');
   });
 });
 
