@@ -1,0 +1,89 @@
+// Aktuelle Projekte: Statuszeile, Finanzierungsbalken, Unterstützen-Dialog, Hotline, Kontodaten ohne JS.
+import { test, before, after } from 'node:test';
+import assert from 'node:assert/strict';
+import { execSync } from 'node:child_process';
+import { startServer, openPage } from './helpers.mjs';
+import { chromium } from 'playwright-core';
+
+let srv;
+before(async () => { srv = await startServer(); });
+after(async () => { await srv.close(); });
+
+// BANK aus dem alten main.js (Quelle der Wahrheit für die Kontodaten)
+const OLD = execSync('git show main:public/js/main.js', { cwd: new URL('..', import.meta.url).pathname, encoding: 'utf8' });
+const BANK = { iban: OLD.match(/const BANK=\{[^}]*iban:'([^']+)'/)[1] };
+
+const cf = (o = {}) => ({ status: 'vorproduktion', ziel: 7500, gesammelt: 0, unterstuetzende: 0, stand: '2026-11-15', ...o });
+
+async function withCf(fixture, fn, opts = {}) {
+  const browser = await chromium.launch({ channel: 'chrome', headless: true });
+  const page = await (await browser.newContext({ viewport: { width: opts.width || 1440, height: 900 } })).newPage();
+  await page.route('**/data/crowdfunding.json', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fixture) }));
+  try { await page.goto(srv.url + '/', { waitUntil: 'load' }); await fn(page); } finally { await browser.close(); }
+}
+
+test('status line', async () => {
+  await withCf(cf(), async (page) => {
+    await page.waitForFunction(() => document.querySelector('#cf-goal')?.textContent.trim() === '7.500 €');
+    assert.match(await page.$eval('#cf-status', (e) => e.textContent), /In Vorproduktion/);
+    assert.equal(await page.$eval('.cf-bar', (e) => e.hidden), true);
+    assert.equal(await page.$eval('.cf-bar', (e) => getComputedStyle(e).display), 'none');
+  });
+});
+
+test('progress bar', async () => {
+  await withCf(cf({ gesammelt: 2850 }), async (page) => {
+    await page.waitForFunction(() => /2\.850 € von 7\.500 € erreicht/.test(document.querySelector('#cf-text')?.textContent || ''));
+    assert.equal(await page.$eval('.cf-bar', (e) => getComputedStyle(e).display !== 'none'), true);
+    await page.evaluate(() => document.querySelector('.cf-bar').scrollIntoView({ block: 'center' }));
+    await page.waitForFunction(() => {
+      const b = document.querySelector('.cf-bar'), i = b.querySelector('i');
+      return Math.round(i.getBoundingClientRect().width / b.getBoundingClientRect().width * 100) === 38;
+    });
+  });
+});
+
+test('support dialog', async () => {
+  await withCf(cf(), async (page) => {
+    await page.click('[data-open="bank"]');
+    await page.waitForSelector('#dlg-bank[open]');
+    assert.equal(await page.$eval('#b-iban', (e) => e.textContent.trim()), BANK.iban);
+    await page.waitForSelector('#qr svg');
+    assert.ok(await page.$('#dlg-bank a[href^="https://paypal.me/"]'));
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !document.querySelector('#dlg-bank').open);
+  });
+});
+
+test('dialog closes on backdrop click and restarts scrolling', async () => {
+  await withCf(cf(), async (page) => {
+    await page.click('[data-open="bank"]');
+    await page.waitForSelector('#dlg-bank[open]');
+    await page.mouse.click(5, 5);
+    await page.waitForFunction(() => !document.querySelector('#dlg-bank').open);
+    await page.waitForFunction(() => !document.documentElement.classList.contains('lenis-stopped'));
+  });
+});
+
+test('hotline and texts', async () => {
+  const o = await openPage(srv.url + '/');
+  try {
+    const t = await o.page.$eval('#projekte', (e) => e.innerText);
+    assert.ok(t.includes('116 016'));
+    assert.ok(t.includes('Dem Schweigen so nah'));
+    assert.equal(await o.page.$$eval('#projekte article.project[data-project="schweigen"] .project-media img', (a) => a.length), 1);
+    for (const c of ['.project-body', '.project-meta', '.project-team']) assert.equal(await o.page.$$eval('#projekte ' + c, (a) => a.length), 1, c);
+    const body = await o.page.$eval('body', (e) => e.innerText + ' ' + [...document.querySelectorAll('[aria-label],[alt],[title]')].map((x) => x.getAttribute('aria-label') + x.alt + x.title).join(' '));
+    assert.ok(!/spende/i.test(body));
+    assert.ok(!/spende/i.test(await o.page.$eval('#dlg-bank', (e) => e.textContent)));
+  } finally { await o.browser.close(); }
+});
+
+test('no-JS bank', async () => {
+  const o = await openPage(srv.url + '/', { js: false });
+  try {
+    const t = await o.page.$eval('#projekte', (e) => e.innerText);
+    assert.ok(t.includes(BANK.iban), 'IBAN ohne JS');
+    assert.ok(!/spende/i.test(t));
+  } finally { await o.browser.close(); }
+});

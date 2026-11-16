@@ -13,7 +13,7 @@ function item(n){ const t=n.de||{};
   body.appendChild(box);
   if(n.link){ const ln=el('a','nw-more','Mehr dazu ↗'); ln.href=n.link; ln.target='_blank'; ln.rel='noopener'; body.appendChild(ln) }
   a.appendChild(body);
-  if(n.bild){ const f=el('div','nw-img'), im=el('img'); im.src=n.bild; im.alt=t.bild_text||''; im.loading='lazy'; im.decoding='async'; f.appendChild(im); a.appendChild(f); a.classList.add('has-img') }
+  if(n.bild){ const f=el('div','nw-img'), im=el('img'); im.src=n.bild; im.alt=t.bild_text||''; im.decoding='async'; f.appendChild(im); a.appendChild(f); a.classList.add('has-img') }
   return a }
 
 const box=document.querySelector('[data-news]'); if(!box) return;
