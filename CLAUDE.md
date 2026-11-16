@@ -10,6 +10,7 @@ public/            ← alles, was online geht
   index.html       Startseite (One-Pager, alle Sektionen + Dialoge wie Impressum/Spenden)
   news.html        Archiv aller Meldungen („Aktuelles“)
   datenschutz.html Datenschutzerklärung (nur Deutsch, ohne main.js)
+  impressum.html   Impressum als eigene Seite (nur Deutsch, ohne main.js), Ausweichweg ohne JavaScript
   css/fonts.css    Schriften (Lora, Inter, Oswald, Source Serif 4), Dateien in fonts/
   css/style.css    gesamtes Styling, Farben als Variablen in :root
   js/main.js       Animationen, Sprache DE/EN, Spenden-Dialog, QR-Code, Crowdfunding-Zahlen
@@ -37,7 +38,11 @@ Jede Speicherung ist ein Commit auf `main` und geht über die GitHub Action auto
 
 **Keine externen Ressourcen einbinden** (kein Google Fonts, kein CDN, keine eingebetteten Videos, kein Tracking). Die Datenschutzerklärung sagt ausdrücklich, dass beim Aufruf keine Daten an Dritte gehen. Wer etwas Externes hinzufügt, muss `datenschutz.html` mit anpassen.
 
-Das Impressum ist ein Dialog auf der Startseite und lässt sich direkt über `index.html#impressum` öffnen.
+Das Impressum ist ein Dialog auf der Startseite und lässt sich direkt über `index.html#impressum` öffnen. Der Footer-Link zeigt auf `impressum.html`; mit JavaScript öffnet sich stattdessen der Dialog.
+
+**Doppelt gepflegte Stellen (immer beide ändern):**
+- Impressum: Dialog `#dlg-imp` in `index.html` und `impressum.html`.
+- Kontodaten: `BANK` in `js/main.js` und der `<noscript>`-Block in `#projekt` in `index.html`.
 
 ## Zweisprachigkeit (wichtig)
 

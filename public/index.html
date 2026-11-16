@@ -6,6 +6,8 @@
 <title>FFD Production Website</title>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
+<!-- Ohne JavaScript: Knöpfe ausblenden, die nur einen Dialog öffnen (Ersatz steht im Text) -->
+<noscript><style>button[data-open]{display:none}</style></noscript>
 </head>
 <body>
 <div class="leader" aria-hidden="true"><div class="ld"><span class="ld-w"><b>FFD</b><i></i><span>Production</span></span><span class="ld-n label" id="ldn">0</span></div><span class="ld-bar"></span></div>
@@ -23,7 +25,14 @@
       <a href="#ueber">Über</a>
       <a href="#kontakt">Kontakt</a>
     </nav>
-    <div class="hd-r"><div class="lang label" role="group" aria-label="Sprache / Language"><button data-lang="de" aria-pressed="true">DE</button><span aria-hidden="true">/</span><button data-lang="en" aria-pressed="false">EN</button></div>
+    <div class="hd-r"><details class="mnav"><summary class="label"><span class="t">Menü</span></summary>
+      <nav aria-label="Hauptnavigation">
+        <a href="#projekt">In Entwicklung</a>
+        <a href="#aktuelles">Aktuelles</a>
+        <a href="#filme">Filme</a>
+        <a href="#ueber">Über</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav></details><div class="lang label" role="group" aria-label="Sprache / Language"><button data-lang="de" aria-pressed="true">DE</button><span aria-hidden="true">/</span><button data-lang="en" aria-pressed="false">EN</button></div>
     <a class="btn" href="#projekt"><span class="dot"></span>Unterstützen</a></div>
   </div>
 </header>
@@ -68,6 +77,16 @@
           <div class="actions">
             <button class="btn act" data-open="bank" data-cursor="Danke">Jetzt unterstützen</button>
           </div>
+          <!-- Spendendaten ohne JavaScript. Gleiche Werte wie BANK in js/main.js, beide Stellen zusammen ändern. -->
+          <noscript><div class="nojs-bank">
+            <span class="label soft">Unterstützen per Überweisung</span>
+            <dl>
+              <div><dt class="label">Kontoinhaber</dt><dd>FFD Production Film</dd></div>
+              <div><dt class="label">IBAN</dt><dd>DE14 1001 1001 2849 3506 03</dd></div>
+              <div><dt class="label">Verwendungszweck</dt><dd>Unterstützung Produktion Dem Schweigen so nah</dd></div>
+            </dl>
+            <p>Oder per PayPal: <a href="https://paypal.me/demschweigensonah" target="_blank" rel="noopener">paypal.me/demschweigensonah ↗</a></p>
+          </div></noscript>
           <details class="syn" id="syn">
             <summary><span class="label">Synopsis lesen</span></summary>
             <div class="body">
@@ -241,7 +260,7 @@
     </div>
     <p class="giant" id="giant" aria-hidden="true">FFD</p>
   </section>
-  <footer><div class="wrap"><span class="label">© 2026 FFD Production · Farouk El-Khalili</span><span class="label" style="display:flex;flex-wrap:wrap;gap:8px 18px"><button class="flink label" data-open="imp">Impressum</button><a class="flink label" href="datenschutz.html">Datenschutz</a><a class="flink label" href="https://deepmetis.com" target="_blank" rel="noopener">Gestaltung &amp; Umsetzung: DeepMetis GmbH</a></span></div></footer>
+  <footer><div class="wrap"><span class="label">© 2026 FFD Production · Farouk El-Khalili</span><span class="label" style="display:flex;flex-wrap:wrap;gap:8px 18px"><a class="flink label" href="impressum.html" data-open="imp">Impressum</a><a class="flink label" href="datenschutz.html">Datenschutz</a><a class="flink label" href="https://deepmetis.com" target="_blank" rel="noopener">Gestaltung &amp; Umsetzung: DeepMetis GmbH</a></span></div></footer>
 </main>
 
 <dialog id="dlg-imp" aria-labelledby="imp-title" style="width:min(640px,calc(100vw - 32px))">

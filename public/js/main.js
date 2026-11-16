@@ -131,6 +131,7 @@ const EN={
   "QR-Code konnte nicht geladen werden.": "The QR code could not be loaded.",
   "FFD Production, zum Seitenanfang": "FFD Production, back to top",
   "Hauptnavigation": "Main navigation",
+  "Menü": "Menu",
   "Logo FFD Production: silberne Buchstaben im Lichtkegel eines Projektors": "FFD Production logo: silver letters in the beam of a projector",
   "Plakat Dem Schweigen so nah: eine weiße Rose mit Blutspuren auf einem Steinboden, dahinter fällt Licht durch eine angelehnte Tür": "Poster for Dem Schweigen so nah: a white rose with traces of blood on a stone floor, light falling through a door left ajar behind it",
   "Danke": "Thank you",
@@ -167,7 +168,7 @@ $$('.lang button').forEach(b=>{ b.setAttribute('aria-pressed',b.dataset.lang===L
   try{ localStorage.setItem('ffd-lang',b.dataset.lang) }catch(e){} location.hash=b.dataset.lang; location.reload() }) });
 
 /* ---------- Daten ---------- */
-const BANK={name:'FFD Production Film',iban:'DE14 1001 1001 2849 3506 03',bic:'',ref:'Unterstützung Produktion Dem Schweigen so nah'}; // Konto laut „Kontodaten Paypal etc.“, Verwendungszweck laut Farouk El-Khalili (13.11.2026)
+const BANK={name:'FFD Production Film',iban:'DE14 1001 1001 2849 3506 03',bic:'',ref:'Unterstützung Produktion Dem Schweigen so nah'}; // Auch im <noscript>-Block in index.html ändern. Konto laut „Kontodaten Paypal etc.“, Verwendungszweck laut Farouk El-Khalili (13.11.2026)
 const TAPE=[['Dem Schweigen so nah',0],['Produktion',1],['Amar & Lena',0],['Entwicklung',1],['Geschichten, die bleiben',0],['Regie',1]].map(([n,k])=>[n==='Regie'&&LANG==='en'?'Directing':T(n),k]);
 
 /* ---------- Platzhalterbilder: Lichtkegel eines Projektors mit Staub ---------- */
@@ -202,7 +203,7 @@ let gi=0; grain.style.backgroundImage=tiles[0]; if(!reduce) setInterval(()=>{gra
 /* ---------- Sanftes Scrollen ---------- */
 const lenis=(window.Lenis&&!reduce)?new Lenis({duration:1.15}):null;
 if(lenis){ if(hasGsap){lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0)} else {const raf=t=>{lenis.raf(t);requestAnimationFrame(raf)};requestAnimationFrame(raf)} }
-$$('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const el=document.getElementById(a.getAttribute('href').slice(1)); if(!el) return; e.preventDefault(); lenis?lenis.scrollTo(el,{offset:-60}):el.scrollIntoView({behavior:reduce?'auto':'smooth'})}));
+$$('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const el=document.getElementById(a.getAttribute('href').slice(1)); if(!el) return; e.preventDefault(); lenis?lenis.scrollTo(el,{offset:-$('header.top').getBoundingClientRect().bottom}):el.scrollIntoView({behavior:reduce?'auto':'smooth'})}));
 
 /* ---------- Wörter aufteilen ---------- */
 $$('[data-split]').forEach(el=>{const out=[]; el.childNodes.forEach(n=>{const cls=n.nodeType===1?n.className:''; n.textContent.split(/\s+/).filter(Boolean).forEach(w=>out.push(`<span class="w"><span class="i ${cls}">${w.replace(/&/g,'&amp;')}</span></span>`))}); el.innerHTML=out.join(' ')});
@@ -229,7 +230,14 @@ fetch('data/crowdfunding.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).c
 
 /* ---------- Dialog ---------- */
 const dB=$('#dlg-bank'), dI=$('#dlg-img'), dImp=$('#dlg-imp'), zoom=$('#zoom');
-$$('[data-open="imp"]').forEach(b=>b.addEventListener('click',()=>{dImp.showModal(); lenis&&lenis.stop()}));
+$$('[data-open="imp"]').forEach(b=>b.addEventListener('click',e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey) return; e.preventDefault(); dImp.showModal(); lenis&&lenis.stop()}));
+// Mobiles Menü (<details>): nach Auswahl, Klick daneben, Escape oder Tab hinaus schließen
+const mnav=$('.mnav');
+if(mnav){ mnav.addEventListener('click',e=>{ if(e.target.closest('a')) mnav.open=false });
+  // nur wenn der Fokus auf ein anderes Element wandert (Tastatur); relatedTarget null = Tippen, das regelt der Klick-Handler
+  mnav.addEventListener('focusout',e=>{ if(mnav.open&&e.relatedTarget&&!mnav.contains(e.relatedTarget)) mnav.open=false });
+  document.addEventListener('click',e=>{ if(mnav.open&&!mnav.contains(e.target)) mnav.open=false });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&mnav.open){ mnav.open=false; mnav.querySelector('summary').focus() } }) }
 [dB,dI,dImp].forEach(d=>{d.addEventListener('close',()=>lenis&&lenis.start()); d.addEventListener('click',e=>{if(e.target===d)d.close()})});
 // Direktaufruf des Impressums, z. B. von der Datenschutzseite aus: index.html#impressum
 if(location.hash==='#impressum'){ dImp.showModal(); lenis&&lenis.stop() }
