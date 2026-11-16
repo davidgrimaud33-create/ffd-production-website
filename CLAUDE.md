@@ -58,7 +58,7 @@ Das Impressum ist ein Dialog auf der Startseite und lässt sich direkt über `in
 
 ## Zweisprachigkeit (derzeit ausgesetzt)
 
-Derzeit ausgesetzt (Relaunch: nur Deutsch, EN-Entscheidung offen). Es gibt keinen Sprachumschalter und kein `EN`-Wörterbuch in `main.js`; Texte stehen nur auf Deutsch im HTML. Fällt die Entscheidung für Englisch, muss die Umschaltung neu geplant werden. Die Datenschutzerklärung (Abschnitt 3, Spracheinstellung) beschreibt noch den alten Umschalter und ist dann anzupassen oder zu streichen.
+Derzeit ausgesetzt (Relaunch: nur Deutsch, EN-Entscheidung offen). Es gibt keinen Sprachumschalter und kein `EN`-Wörterbuch in `main.js`; Texte stehen nur auf Deutsch im HTML. Fällt die Entscheidung für Englisch, muss die Umschaltung neu geplant werden. Kommt ein Umschalter mit gespeicherter Sprachwahl zurück, braucht die Datenschutzerklärung dafür wieder einen Abschnitt.
 
 ## Lokal ansehen
 
