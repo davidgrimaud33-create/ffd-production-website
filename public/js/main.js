@@ -68,7 +68,7 @@ if(startId){
 }
 
 /* Intro: Logo sanft einblenden (nur ohne reduzierte Bewegung) */
-if(hasGsap&&!reduce) gsap.from('.intro-logo img',{opacity:0,scale:.98,duration:1.2,ease:'power2.out'});
+if(hasGsap&&!reduce) gsap.from('.intro-logo',{opacity:0,scale:.98,duration:1.2,ease:'power2.out'});
 
 /* Punkte-Navigation: aktiver Abschnitt = der, der die Mitte des Viewports schneidet; im Intro ausgeblendet */
 const dots=document.querySelector('.dots');
