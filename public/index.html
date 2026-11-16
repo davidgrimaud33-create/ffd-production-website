@@ -12,17 +12,26 @@
 <meta property="og:title" content="FFD Production – Unabhängige Filmproduktion aus Berlin">
 <meta property="og:description" content="Unabhängige Filmproduktion aus Berlin, gegründet 2022 von Farouk El-Khalili.">
 <meta property="og:image" content="img/logo-quer.jpg">
+<script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
 <!-- Gerüst des Relaunchs (Task 1). Inhalte der Abschnitte werden in den folgenden Schritten gefüllt. -->
 </head>
 <body>
+<nav class="dots" aria-label="Abschnitte"><a href="#news" aria-label="News"><span class="dot-label">News</span></a><a href="#projekte" aria-label="Projekte"><span class="dot-label">Projekte</span></a><a href="#abgeschlossen" aria-label="Abgeschlossen"><span class="dot-label">Abgeschlossen</span></a><a href="#vita-ffd" aria-label="Vita FFD"><span class="dot-label">Vita FFD</span></a><a href="#geschichte" aria-label="Geschichte"><span class="dot-label">Geschichte</span></a><a href="#gruender" aria-label="Gründer"><span class="dot-label">Gründer</span></a><a href="#vita" aria-label="Vita"><span class="dot-label">Vita</span></a><a href="#kontakt" aria-label="Kontakt"><span class="dot-label">Kontakt</span></a></nav>
+<button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menü öffnen"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<dialog id="menu" class="menu" aria-label="Menü">
+  <button class="menu-close" type="button" aria-label="Menü schließen"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <nav aria-label="Abschnitte"><a href="#news">News</a><a href="#projekte">Projekte</a><a href="#abgeschlossen">Abgeschlossen</a><a href="#vita-ffd">Vita FFD</a><a href="#geschichte">Geschichte</a><a href="#gruender">Gründer</a><a href="#vita">Vita</a><a href="#kontakt">Kontakt</a></nav>
+</dialog>
+
 <main>
 
   <section id="intro" class="sec sec-intro" data-label="Intro">
     <div class="wrap sec-body intro-body">
-      <h1 class="intro-title"><a href="#news">FFD Production</a></h1>
-      <p class="label muted">Klicken oder scrollen</p>
+      <h1 class="sr-only">FFD Production</h1>
+      <a class="intro-logo" href="#news"><img src="img/logo-ffd.jpg" alt="FFD Production" width="1400" height="1208" fetchpriority="high"></a>
+      <p class="label muted intro-hint">Klicken oder scrollen</p>
     </div>
     <a class="next" href="#news"><span>News</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v15M5 12l7 7 7-7"/></svg></a>
   </section>

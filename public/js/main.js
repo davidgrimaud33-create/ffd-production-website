@@ -59,4 +59,30 @@ if(startId){
   addEventListener('load',()=>{ if(pinned) go(startId,true); hasGsap&&ScrollTrigger.refresh() },{once:true});
   setTimeout(unpin,4000);
 }
+
+/* Intro: Logo sanft einblenden (nur ohne reduzierte Bewegung) */
+if(hasGsap&&!reduce) gsap.from('.intro-logo img',{opacity:0,scale:.98,duration:1.2,ease:'power2.out'});
+
+/* Punkte-Navigation: aktiver Abschnitt = der, der die Mitte des Viewports schneidet; im Intro ausgeblendet */
+const dots=document.querySelector('.dots');
+if(dots&&window.IntersectionObserver){
+  const links=[...dots.querySelectorAll('a[href^="#"]')];
+  const setActive=id=>{
+    dots.classList.toggle('is-on',id!=='intro');
+    links.forEach(a=>{ if(a.getAttribute('href')==='#'+id) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current') });
+  };
+  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) setActive(e.target.id) }),{rootMargin:'-50% 0px -50% 0px'});
+  document.querySelectorAll('main > section').forEach(s=>io.observe(s));
+}
+
+/* Mobiles Menü: Dialog, Lenis während der Anzeige anhalten */
+const menu=document.getElementById('menu'), menuBtn=document.querySelector('.menu-btn');
+if(menu&&menuBtn&&menu.showModal){
+  const closeMenu=()=>{ if(menu.open){ menu.close(); window.FFD.lenis?.start() } };
+  menuBtn.addEventListener('click',()=>{ menu.showModal(); menuBtn.setAttribute('aria-expanded','true'); window.FFD.lenis?.stop() });
+  menu.addEventListener('close',()=>{ menuBtn.setAttribute('aria-expanded','false'); window.FFD.lenis?.start(); menuBtn.focus({preventScroll:true}) });
+  menu.querySelector('.menu-close').addEventListener('click',closeMenu);
+  menu.addEventListener('click',e=>{ if(e.target.closest('a[href^="#"]')){ closeMenu() } });
+  matchMedia('(min-width:761px)').addEventListener('change',e=>{ if(e.matches) closeMenu() });
+}
 })();
