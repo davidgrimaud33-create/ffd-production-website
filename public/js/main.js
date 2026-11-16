@@ -110,6 +110,13 @@ fetch('data/crowdfunding.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).c
 
 /* Unterstützen-Dialog: Kontodaten, GiroCode (EPC-QR), Kopieren-Knöpfe */
 const BANK={name:'FFD Production Film',iban:'DE14 1001 1001 2849 3506 03',bic:'',ref:'Unterstützung Produktion Dem Schweigen so nah'}; // Auch im <noscript>-Block in index.html ändern.
+/* Gemeinsames Dialog-Muster: Lenis anhalten/fortsetzen, Klick auf den Hintergrund und [data-close] schließen (Esc nativ) */
+const bindDialog=d=>{
+  d.addEventListener('close',()=>window.FFD.lenis?.start());
+  d.addEventListener('click',e=>{ if(e.target===d) d.close() });
+  d.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>d.close()));
+};
+const openDialog=d=>{ d.showModal(); window.FFD.lenis?.stop() };
 const dB=document.getElementById('dlg-bank');
 if(dB&&dB.showModal){
   let amount=50;
@@ -122,11 +129,8 @@ if(dB&&dB.showModal){
       const q=qrcode(0,'M'); q.addData(epc); q.make(); box.innerHTML=q.createSvgTag({cellSize:4,margin:0,scalable:true});
     } else box.textContent='QR-Code konnte nicht geladen werden.';
   };
-  const stop=()=>window.FFD.lenis?.stop(), start=()=>window.FFD.lenis?.start();
-  document.querySelectorAll('[data-open="bank"]').forEach(b=>b.addEventListener('click',()=>{ renderBank(); dB.showModal(); stop() }));
-  dB.addEventListener('close',start);
-  dB.addEventListener('click',e=>{ if(e.target===dB) dB.close() });
-  dB.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>dB.close()));
+  bindDialog(dB);
+  document.querySelectorAll('[data-open="bank"]').forEach(b=>b.addEventListener('click',()=>{ renderBank(); openDialog(dB) }));
   dB.querySelectorAll('.amounts button').forEach(b=>b.addEventListener('click',()=>{
     dB.querySelectorAll('.amounts button').forEach(x=>x.setAttribute('aria-pressed',x===b)); amount=+b.dataset.amt; renderBank() }));
   dB.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
@@ -134,5 +138,13 @@ if(dB&&dB.showModal){
     const sel=()=>{ const r=document.createRange(); r.selectNodeContents(el); const s=getSelection(); s.removeAllRanges(); s.addRange(r) };
     const done=()=>{ b.textContent='Kopiert'; b.classList.add('ok'); setTimeout(()=>{ b.textContent=lbl; b.classList.remove('ok') },1600) };
     try{ navigator.clipboard.writeText(el.textContent.trim()).then(done,sel) }catch(e){ sel() } }));
+}
+
+/* Bild-Zoom (Plakat, Standbilder) */
+const dI=document.getElementById('dlg-img'), zoomImg=document.getElementById('zoom');
+if(dI&&zoomImg&&dI.showModal){
+  bindDialog(dI);
+  document.querySelectorAll('[data-zoom]').forEach(b=>b.addEventListener('click',()=>{
+    const im=b.querySelector('img'); zoomImg.src=im.currentSrc||im.src; zoomImg.alt=im.alt; openDialog(dI) }));
 }
 })();
