@@ -5,7 +5,7 @@
 :root{
   /* Farben */
   --bg:#0C0C0C;         /* Hintergrund */
-  --card:#161616;       /* Flächen, Karten */
+  --card:rgba(242,238,230,.045); /* Flächen, Karten: leicht transparent, damit die Abschnittsfarbe durchscheint */
   --text:#F2EEE6;       /* Text */
   --gold:#C9A24A;       /* Akzent: Pfeile, Buttons, Preise, Labels */
   --muted:#A39D92;      /* Nebentext */
@@ -14,6 +14,10 @@
   --qr-ink:#141413;     /* Text auf dem GiroCode-Feld */
   --line:rgba(242,238,230,.12);
   --gold-soft:rgba(201,162,74,.14);
+  /* Abschnittsfarben (Farouk 17.11.): FFD-Abschnitte dunkles Petrol, der aktuelle Film ein Hauch dunkles Rot.
+     Bewusst knapp über --bg, damit der ruhige Look bleibt. Übergänge fließend über --c-top/--c-bot (siehe „Abschnittsfarben“). */
+  --petrol:#0B1B1E;
+  --wein:#1B0D0F;
 
   /* Schrift: nur Inter (lokal, css/fonts.css) */
   --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
@@ -80,7 +84,16 @@ small{font-size:var(--fs-small)}
 .sec{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;padding-block:var(--s-9) var(--s-6)}
 .sec-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:var(--s-6)}
 .sec-head{display:grid;gap:var(--s-4)}
-.sec + .sec{border-top:1px solid var(--line)}
+.sec{--c:var(--bg);--c-top:var(--c);--c-bot:var(--c);background:linear-gradient(to bottom,var(--c-top),var(--c) min(40vh,30%),var(--c) max(calc(100% - 40vh),70%),var(--c-bot))}
+
+/* Abschnittsfarben: oben/unten treffen sich benachbarte Abschnitte in derselben Mischfarbe, dadurch keine Kanten */
+#intro{--c-bot:color-mix(in srgb,var(--bg),var(--petrol))}
+#news{--c:var(--petrol);--c-top:color-mix(in srgb,var(--bg),var(--petrol));--c-bot:color-mix(in srgb,var(--petrol),var(--wein))}
+#projekte{--c:var(--wein);--c-top:color-mix(in srgb,var(--petrol),var(--wein));--c-bot:color-mix(in srgb,var(--wein),var(--bg))}
+#abgeschlossen{--c-top:color-mix(in srgb,var(--wein),var(--bg));--c-bot:color-mix(in srgb,var(--bg),var(--petrol))}
+#vita-ffd{--c:var(--petrol);--c-top:color-mix(in srgb,var(--bg),var(--petrol))}
+#geschichte,#gruender,#vita{--c:var(--petrol)}
+#kontakt{--c:var(--petrol);--c-bot:var(--bg)}
 
 /* Pfeil zum nächsten Abschnitt: zentriert unten, Gold, Label in Versalien */
 .next{align-self:center;margin-top:var(--s-8);display:inline-flex;flex-direction:column;align-items:center;gap:var(--s-2);padding:var(--s-3) var(--s-4);color:var(--gold);text-decoration:none;font-size:var(--fs-label);font-weight:600;text-transform:uppercase;letter-spacing:var(--track-label);line-height:1.4}
@@ -118,6 +131,11 @@ small{font-size:var(--fs-small)}
 .intro-logo img{position:absolute;left:50%;top:50%;width:var(--lw);max-width:none;height:auto;transform:translate(-50%,-50%);pointer-events:none;mix-blend-mode:lighten;-webkit-mask-image:radial-gradient(closest-side,#000 55%,transparent);mask-image:radial-gradient(closest-side,#000 55%,transparent)}
 .intro-hint,.sec-intro .next{position:relative;z-index:1}
 .intro-hint{margin:0}
+.intro-teaser{position:relative;z-index:1;display:grid;justify-items:center;gap:var(--s-3);margin-top:var(--s-2)}
+.intro-film{font-size:var(--fs-h3);font-weight:300;letter-spacing:var(--track-title);line-height:1.2}
+.intro-film a{text-decoration:none}
+.intro-film a:hover{text-decoration:underline;text-decoration-color:var(--gold)}
+.intro-teaser .btn{margin-top:var(--s-2)}
 @media (max-width:760px){
   .intro-logo{--lw:min(172vw,860px)}
 }
@@ -162,7 +180,7 @@ small{font-size:var(--fs-small)}
 .nw-text{display:grid;gap:var(--s-3);color:var(--muted);max-width:62ch}
 .nw-more{display:inline-block;margin-top:var(--s-4);color:var(--gold);font-size:var(--fs-label);font-weight:600;text-transform:uppercase;letter-spacing:.2em;text-decoration:none}
 .nw-more:hover{color:var(--text)}
-.nw-img img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;display:block;border-radius:var(--radius);background:var(--card)}
+.nw-img img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;object-position:50% 15%;display:block;border-radius:var(--radius);background:var(--card)}
 .nw-empty{color:var(--muted)}
 #news-more{align-self:flex-start;margin-top:var(--s-6)}
 @media (max-width:760px){
@@ -191,23 +209,45 @@ small{font-size:var(--fs-small)}
 .project-meta{display:grid;gap:var(--s-6);padding-top:var(--s-6);border-top:1px solid var(--line)}
 .project-theme{display:grid;gap:var(--s-3);max-width:62ch}
 .project-quote{font-size:var(--fs-lede);font-weight:300;line-height:1.4}
+.project-source{color:var(--muted);font-size:var(--fs-small)}
 .project-team{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:var(--s-4)}
 .project-team dt{margin-bottom:var(--s-1)}
 .project-fund{display:grid;gap:var(--s-4);justify-items:start;padding:var(--s-6);background:var(--card);border:1px solid var(--line);border-radius:var(--radius)}
 .fund-goal b{font-weight:300;font-size:var(--fs-h3);color:var(--gold);margin-left:var(--s-2)}
 .cf-bar{width:100%;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
 .cf-bar i{display:block;height:100%;width:var(--p,0%);background:var(--gold)}
-.fund-uses{display:grid;gap:var(--s-2)}
-.uses{display:flex;flex-wrap:wrap;gap:var(--s-2)}
-.uses li{padding:var(--s-1) var(--s-3);border:1px solid var(--line);border-radius:var(--radius);font-size:var(--fs-small);color:var(--muted)}
 .nojs-bank{display:grid;gap:var(--s-3);padding-top:var(--s-4);border-top:1px solid var(--line);width:100%}
 .nojs-bank dl{display:grid;gap:var(--s-3)}
 .nojs-bank dd{overflow-wrap:anywhere}
 .project-help{display:grid;gap:var(--s-2);padding-top:var(--s-5);border-top:1px solid var(--line)}
 .project-help b{font-weight:600;color:var(--gold);font-size:var(--fs-lede);margin-right:var(--s-2)}
+/* Unterstützen (Farouks Text vom 17.11.): links Aufruf, Ziel, Knopf, Ablauf; rechts Dankeschön-Stufen */
+.support{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--s-8);margin-top:var(--s-9);padding-top:var(--s-8);border-top:1px solid var(--line);scroll-margin-top:var(--s-6)}
+.support-main,.support-tiers{display:grid;gap:var(--s-5);align-content:start}
+.support-title{font-size:clamp(1.75rem,1.2rem + 2vw,2.75rem)}
+.support-h{font-size:var(--fs-h3);font-weight:300;letter-spacing:var(--track-title);line-height:1.2}
+.support-tiers .support-h:not(:first-child){margin-top:var(--s-5)}
+.support-what{display:grid;gap:var(--s-3);padding-top:var(--s-5);border-top:1px solid var(--line)}
+.support-cases{list-style:decimal;padding-left:1.4em;display:grid;gap:var(--s-3)}
+.support-cases li::marker{color:var(--gold);font-weight:600}
+.support b{font-weight:600}
+.tiers{width:100%;border-collapse:collapse;font-size:var(--fs-small)}
+.tiers th,.tiers td{padding:var(--s-3) var(--s-3) var(--s-3) 0;text-align:left;vertical-align:baseline;border-bottom:1px solid var(--line)}
+.tiers thead th{padding-block:0 var(--s-2)}
+.tiers tbody th{width:9.5rem;white-space:nowrap;font-weight:600;color:var(--gold)}
+.tiers td{color:var(--text)}
+.tiers .is-free th{color:var(--text)}
+.tiers .is-free td{color:var(--muted)}
+.support-note{padding:var(--s-3) var(--s-4);border-left:2px solid var(--gold);background:var(--gold-soft);font-size:var(--fs-small);font-style:italic;color:var(--text);border-radius:0 var(--radius) var(--radius) 0}
+@media (max-width:900px){
+  .support{grid-template-columns:1fr;gap:var(--s-7);margin-top:var(--s-8)}
+}
+@media (max-width:480px){
+  .tiers tbody th{width:auto;white-space:normal;padding-right:var(--s-4)}
+}
 @media (max-width:900px){
   .project{grid-template-columns:1fr;gap:var(--s-6)}
-  .project-media{max-width:26rem}
+  .project-media{max-width:26rem;position:static}
 }
 
 /* Abgeschlossene Projekte */
@@ -338,6 +378,7 @@ small{font-size:var(--fs-small)}
 .tl-body em{font-style:normal;font-weight:300;font-size:var(--fs-h3);line-height:1.2;letter-spacing:var(--track-title)}
 .tl-body em small{color:var(--muted);font-size:.6em;letter-spacing:0}
 .tl-meta{margin:0;color:var(--muted);font-size:var(--fs-small)}
+.tl-group{margin-top:var(--s-7);margin-bottom:var(--s-4)}
 .tl-img{margin-top:var(--s-4);width:min(100%,420px);height:auto;border-radius:var(--radius)}
 @media (max-width:640px){
   .timeline li{grid-template-columns:1fr;gap:var(--s-2)}
@@ -361,6 +402,8 @@ small{font-size:var(--fs-small)}
 .split-photo{margin:0;display:grid;gap:var(--s-2)}
 .split-photo img{width:100%;height:auto;border-radius:var(--radius);background:var(--card)}
 .split-portrait .split-photo img{max-height:70vh;object-fit:cover;object-position:top}
+.founder-voice{margin:0;display:grid;gap:var(--s-3);max-width:62ch;padding-left:var(--s-5);border-left:1px solid var(--gold)}
+.founder-voice p{font-weight:300;font-size:var(--fs-body);line-height:1.6}
 .credit{margin-top:var(--s-2);font-size:var(--fs-label);color:var(--muted);letter-spacing:.08em}
 .keys{display:flex;flex-wrap:wrap;gap:var(--s-6);margin:0}
 .keys div{display:grid;gap:var(--s-1)}

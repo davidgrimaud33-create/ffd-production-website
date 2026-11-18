@@ -1,0 +1,5 @@
+# Solange die Seite nur unter pages.dev läuft, ist sie per noindex (Meta-Tag und X-Robots-Tag in _headers)
+# von Suchmaschinen ausgeschlossen. Crawlen ist erlaubt, damit Suchmaschinen das noindex überhaupt sehen.
+# Beim Umzug auf die eigene Domain: noindex entfernen und hier eine Sitemap eintragen.
+User-agent: *
+Allow: /

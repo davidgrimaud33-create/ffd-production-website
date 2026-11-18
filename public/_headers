@@ -1,0 +1,4 @@
+# Solange die Seite nur unter pages.dev läuft: nicht in Suchmaschinen aufnehmen.
+# Beim Umzug auf die eigene Domain diesen Block entfernen (und die noindex-Meta-Tags in den HTML-Dateien).
+/*
+  X-Robots-Tag: noindex

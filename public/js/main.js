@@ -18,7 +18,9 @@ if(lenis){
 /* Zu einem Abschnitt scrollen. immediate: ohne Animation (z. B. beim Laden mit Anker). */
 function go(id,immediate){
   const el=document.getElementById(id); if(!el) return false;
-  if(lenis){ if(immediate) lenis.resize(); lenis.scrollTo(el,{immediate:!!immediate,force:true}) }
+  /* Nachgeladene Inhalte (News, Bilder) können das Ziel während des Scrollens verschieben: am Ende nachkorrigieren. */
+  if(lenis){ if(immediate) lenis.resize(); lenis.scrollTo(el,{immediate:!!immediate,force:true,onComplete:()=>{
+    if(Math.abs(el.getBoundingClientRect().top)>2){ lenis.resize(); lenis.scrollTo(el,{force:true,duration:.4}) } }}) }
   else el.scrollIntoView({behavior:(reduce||immediate)?'auto':'smooth',block:'start'});
   return true;
 }
@@ -102,6 +104,7 @@ fetch('data/crowdfunding.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).c
   const st=document.getElementById('cf-status'), goal=document.getElementById('cf-goal'), bar=document.querySelector('.cf-bar'), txt=document.getElementById('cf-text');
   if(st&&CF_STATUS[cf.status]) st.textContent=CF_STATUS[cf.status];
   if(goal) goal.textContent=fmt(cf.ziel)+' €';
+  const goalTxt=document.getElementById('cf-goal-text'); if(goalTxt) goalTxt.textContent=fmt(cf.ziel)+' Euro';
   if(bar&&txt&&cf.gesammelt>0){
     const pct=Math.min(100,cf.gesammelt/cf.ziel*100);
     bar.hidden=false; txt.hidden=false;
@@ -139,7 +142,8 @@ if(dB&&dB.showModal){
     } else box.textContent='QR-Code konnte nicht geladen werden.';
   };
   bindDialog(dB);
-  document.querySelectorAll('[data-open="bank"]').forEach(b=>b.addEventListener('click',()=>{ renderBank(); openDialog(dB) }));
+  /* Auch Links (Startbild): ohne JS springen sie zum Abschnitt „Unterstützen“, mit JS öffnet der Dialog. */
+  document.querySelectorAll('[data-open="bank"]').forEach(b=>b.addEventListener('click',e=>{ e.preventDefault(); renderBank(); openDialog(dB) }));
   dB.querySelectorAll('.amounts button').forEach(b=>b.addEventListener('click',()=>{
     dB.querySelectorAll('.amounts button').forEach(x=>x.setAttribute('aria-pressed',x===b)); amount=+b.dataset.amt; renderBank() }));
   dB.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{

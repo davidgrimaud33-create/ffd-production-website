@@ -24,10 +24,21 @@ test('timeline order', async () => {
   });
 });
 
+test('Smoke und Zahra als frühe Projekte, Zahra vor Gründung', async () => {
+  await withPage(async (page) => {
+    assert.equal(await page.$eval('#vita-ffd .tl-group', (e) => e.textContent.trim()), 'Frühe Projekte');
+    const early = await page.$$eval('#vita-ffd ol.timeline-early > li em', (els) => els.map((e) => e.textContent.trim()));
+    assert.equal(early.length, 2);
+    assert.match(early[0], /Smoke/);
+    assert.match(early[1], /Zahra/);
+    assert.match(await page.$eval('#vita-ffd ol.timeline-early > li:nth-child(2) .tl-meta', (e) => e.textContent), /vor Gründung von FFD Production/);
+  });
+});
+
 test('timeline image only at Zahra, with dimensions and lazy loading', async () => {
   await withPage(async (page) => {
     assert.equal(await page.locator('#vita-ffd ol.timeline img').count(), 1);
-    const img = page.locator('#vita-ffd ol.timeline > li:nth-child(4) img[src*="zahra"]');
+    const img = page.locator('#vita-ffd ol.timeline-early > li:nth-child(2) img[src*="zahra"]');
     assert.equal(await img.count(), 1);
     assert.equal(await img.getAttribute('loading'), 'lazy');
     assert.ok(await img.getAttribute('width'));
@@ -47,7 +58,9 @@ test('geschichte', async () => {
     assert.match(t, /Geschichten, die bleiben\./);
     assert.match(t, /2022/);
     assert.match(t, /Berlin/);
-    assert.match(t, /\[[^\]]*FFD[^\]]*\]/);
+    assert.match(t, /ihre erste offizielle Produktion/);
+    assert.match(t, /Anfangsbuchstaben von Farouk El-Khalilis Geschwistern/);
+    assert.doesNotMatch(t, /liefert Farouk/);
     assert.equal(await page.locator('#geschichte img').count(), 0, 'kein Porträt in Geschichte');
   });
 });
@@ -60,7 +73,8 @@ test('gruender', async () => {
     assert.ok(await img.getAttribute('width'));
     const t = await page.$eval('#gruender', (e) => e.textContent);
     assert.match(t, /Schauspieler · Autor · Produzent/);
-    assert.match(t, /\[[^\]]*liefert Farouk\]/);
+    assert.match(t, /Ich komme vom Schauspiel\./);
+    assert.doesNotMatch(t, /liefert Farouk/);
     assert.match(t, /Ronny Wunderlich/);
   });
 });

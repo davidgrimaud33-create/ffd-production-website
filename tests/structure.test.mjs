@@ -111,7 +111,8 @@ test('reduced motion', async () => {
 
 test('no spenden', async () => {
   await withPage('/', {}, async ({ page }) => {
-    const text = await page.evaluate(() => document.body.innerText);
+    // Ausnahme: Farouks Text zu Stufen und Überweisungshinweis (17.11.2026)
+    const text = await page.evaluate(() => { document.querySelectorAll('.tiers .is-free, .support-note').forEach((e) => e.remove()); return document.body.innerText; });
     assert.doesNotMatch(text, /spend/i);
   });
 });
@@ -141,8 +142,25 @@ test('every content section has exactly one h2 (the section label)', async () =>
 test('no placeholder links that jump to top', async () => {
   await withPage('/', {}, async ({ page }) => {
     assert.equal(await page.$$eval('a[href="#"]', (a) => a.length), 0);
-    const ph = await page.$$eval('#vita .is-placeholder', (e) => e.map((x) => ({ tag: x.tagName, dis: x.getAttribute('aria-disabled'), t: x.textContent })));
-    assert.equal(ph.length, 2);
-    for (const p of ph) { assert.equal(p.tag, 'SPAN'); assert.equal(p.dis, 'true'); assert.match(p.t, /\[URL liefert Farouk\]/); }
+    assert.equal(await page.$$eval('.is-placeholder', (e) => e.length), 0);
+    assert.doesNotMatch(await page.evaluate(() => document.body.textContent), /liefert Farouk/);
+    const links = await page.$$eval('#vita .vita-links a', (a) => a.map((x) => x.href));
+    assert.deepEqual(links, ['https://www.filmmakers.eu/de/actors/farouk-el-khalili/video/30141', 'https://agenturfrehse.com/schauspieler/farouk-el-khalili/']);
   });
+});
+
+test('noindex, robots.txt und Favicon', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const root = new URL('../public/', import.meta.url);
+  for (const f of ['index.html', 'impressum.html', 'datenschutz.html']) {
+    const h = await readFile(new URL(f, root), 'utf8');
+    assert.match(h, /<meta name="robots" content="noindex">/, f);
+    assert.match(h, /<link rel="icon" href="favicon.ico"/, f);
+  }
+  assert.match(await readFile(new URL('robots.txt', root), 'utf8'), /User-agent: \*/);
+  assert.match(await readFile(new URL('_headers', root), 'utf8'), /X-Robots-Tag: noindex/);
+  for (const f of ['favicon.ico', 'apple-touch-icon.png', 'img/icon-192.png']) {
+    const r = await fetch(srv.url + '/' + f);
+    assert.equal(r.status, 200, f);
+  }
 });

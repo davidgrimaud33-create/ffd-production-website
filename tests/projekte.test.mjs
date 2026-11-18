@@ -88,6 +88,8 @@ test('dialog closes on backdrop click and restarts scrolling', async () => {
 test('hotline and texts', async () => {
   const o = await openPage(srv.url + '/');
   try {
+    // „Spende“ nur in Farouks Text zu Stufen und Überweisungshinweis (17.11.2026), sonst überall „Unterstützen“
+    await o.page.evaluate(() => { document.querySelectorAll('.tiers .is-free, .support-note').forEach((e) => e.remove()); });
     const t = await o.page.$eval('#projekte', (e) => e.innerText);
     assert.ok(t.includes('116 016'));
     assert.ok(t.includes('Dem Schweigen so nah'));
@@ -104,10 +106,73 @@ test('hotline and texts', async () => {
 test('no-JS bank', async () => {
   const o = await openPage(srv.url + '/', { js: false });
   try {
+    await o.page.evaluate(() => { document.querySelectorAll('.tiers .is-free, .support-note').forEach((e) => e.remove()); });
     const t = await o.page.$eval('#projekte', (e) => e.innerText);
     assert.ok(t.includes(BANK.name), 'Kontoinhaber ohne JS');
     assert.ok(t.includes(BANK.iban), 'IBAN ohne JS');
     assert.ok(t.includes(BANK.ref), 'Verwendungszweck ohne JS');
     assert.ok(!/spende/i.test(t));
   } finally { await o.browser.close(); }
+});
+
+// Farouks Feedback vom 17.11.2026
+test('Ziel steht auch im Aufruftext und folgt den CMS-Daten', async () => {
+  await withCf(cf({ ziel: 9000 }), async (page) => {
+    await page.waitForFunction(() => document.querySelector('#cf-goal-text')?.textContent.trim() === '9.000 Euro');
+  });
+});
+
+test('Fallback-Ziel im HTML ist 8.500 €', async () => {
+  const { openPage: op } = await import('./helpers.mjs');
+  const { page, browser } = await op(srv.url + '/', { js: false });
+  try {
+    assert.equal(await page.$eval('#cf-goal', (e) => e.textContent.trim()), '8.500 €');
+    assert.equal(await page.$eval('#cf-goal-text', (e) => e.textContent.trim()), '8.500 Euro');
+  } finally { await browser.close(); }
+});
+
+test('Dankeschön-Stufen und Hinweise im Abschnitt Unterstützen', async () => {
+  await withCf(cf(), async (page) => {
+    const rows = await page.$$eval('#unterstuetzen .tiers tbody th', (e) => e.map((x) => x.textContent.trim()));
+    assert.deepEqual(rows, ['Freiwillige Spende', 'ab 10 €', 'ab 25 €', 'ab 50 €', 'ab 100 €', 'ab 250 €', 'ab 500 €', 'ab 500 €', 'ab 1.000 €', 'ab 2.500 €']);
+    const t = await page.$eval('#unterstuetzen', (e) => e.textContent);
+    assert.match(t, /Februar 2027/);
+    assert.match(t, /keine Spendenquittungen/);
+    assert.match(t, /Rechnung/);
+  });
+});
+
+test('Projektdaten: Drehbuch, neue Handlung, BKA-Quelle', async () => {
+  await withCf(cf(), async (page) => {
+    const t = await page.$eval('#projekte', (e) => e.textContent);
+    assert.match(t, /Drehbuch\s*Stine Volkmann/);
+    assert.doesNotMatch(t, /Exposé/);
+    assert.match(t, /Steffi ist Polizistin\. Sie hat gelernt, genau hinzusehen\./);
+    assert.doesNotMatch(t, /Jörg/);
+    assert.match(t, /265\.942 Opfer häuslicher Gewalt/);
+    assert.match(t, /Quelle: Bundeskriminalamt, Lagebild Häusliche Gewalt 2024/);
+    assert.doesNotMatch(t, /UN Women/);
+  });
+});
+
+test('Startbild: Hinweis auf den Film, Knopf öffnet den Dialog', async () => {
+  await withCf(cf(), async (page) => {
+    assert.match(await page.$eval('#intro', (e) => e.textContent), /Dem Schweigen so nah/);
+    await page.click('#intro [data-open="bank"]');
+    await page.waitForSelector('#dlg-bank[open]');
+  });
+});
+
+test('Startbild ohne JS: Knopf führt zum Abschnitt Unterstützen', async () => {
+  const { page, browser } = await openPage(srv.url + '/', { js: false });
+  try {
+    assert.equal(await page.$eval('#intro [data-open="bank"]', (e) => e.getAttribute('href')), '#unterstuetzen');
+    assert.ok(await page.$('#unterstuetzen'));
+  } finally { await browser.close(); }
+});
+
+test('Handy: Plakat bleibt nicht kleben', async () => {
+  await withCf(cf(), async (page) => {
+    assert.equal(await page.$eval('#projekte .project-media', (e) => getComputedStyle(e).position), 'static');
+  }, { width: 390 });
 });

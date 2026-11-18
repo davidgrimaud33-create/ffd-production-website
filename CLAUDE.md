@@ -44,7 +44,7 @@ Farouk bearbeitet Meldungen und Crowdfunding-Zahlen unter https://app.pagescms.o
 Jede Speicherung ist ein Commit auf `main` und geht über die GitHub Action automatisch online.
 - Vor eigenen Änderungen deshalb immer erst `git pull`, sonst gibt es Konflikte mit Farouks Commits.
 - Felder in `.pages.yml` und `scripts/build-content.mjs` gehören zusammen. Wer ein Feld umbenennt, ändert beide und die vorhandenen Dateien in `content/`.
-- Meldungen und Crowdfunding-Zahlen nicht im HTML pflegen, sondern in `content/`. Die Werte im HTML (7.500 €, „Vorproduktion“) sind nur Rückfall, falls `data/` fehlt.
+- Meldungen und Crowdfunding-Zahlen nicht im HTML pflegen, sondern in `content/`. Die Werte im HTML (8.500 €, „Vorproduktion“) sind nur Rückfall, falls `data/` fehlt.
 - Die Action verkleinert Bilder in `public/img/news/` beim Veröffentlichen (max. 1800 px), im Repo bleiben die Originale.
 
 
@@ -80,6 +80,8 @@ Cloudflare-Projekt: `ffd-production-website` (Konto david.grimaud33)
 Secret im Repo: `CLOUDFLARE_API_TOKEN` (Cloudflare Pages: Edit).
 Notfall ohne GitHub: erst `node scripts/build-content.mjs`, dann `npx wrangler pages deploy public --project-name ffd-production-website --branch main`
 Vorschau eines Branches (ohne live zu gehen): dasselbe mit `--branch <name>`, ergibt eine eigene Vorschau-URL.
+
+**Suchmaschinen:** Solange die Seite nur unter pages.dev läuft, ist sie auf `noindex` gestellt (Meta-Tag in `index.html`, `impressum.html`, `datenschutz.html` und `X-Robots-Tag` in `public/_headers`). Beim Umzug auf die eigene Domain alle vier Stellen entfernen und in `public/robots.txt` die Sitemap eintragen.
 
 ## Regeln
 
