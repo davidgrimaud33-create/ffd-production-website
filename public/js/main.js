@@ -131,7 +131,7 @@ const bindDialog=d=>{
 const openDialog=d=>{ d.showModal(); window.FFD.lenis?.stop() };
 const dB=document.getElementById('dlg-bank');
 if(dB&&dB.showModal){
-  let amount=50;
+  let amount=60;
   const $=id=>document.getElementById(id);
   const renderBank=()=>{
     $('b-name').textContent=BANK.name; $('b-iban').textContent=BANK.iban; $('b-ref').textContent=BANK.ref;
