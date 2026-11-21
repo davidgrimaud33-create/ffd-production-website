@@ -134,7 +134,7 @@ test('Fallback-Ziel im HTML ist 8.500 €', async () => {
 test('Dankeschön-Stufen und Hinweise im Abschnitt Unterstützen', async () => {
   await withCf(cf(), async (page) => {
     const rows = await page.$$eval('#unterstuetzen .tiers tbody th', (e) => e.map((x) => x.textContent.trim()));
-    assert.deepEqual(rows, ['Freier Betrag', 'ab 15 €', 'ab 30 €', 'ab 60 €', 'ab 100 €', 'ab 150 €', 'ab 250 €', 'ab 400 €', 'ab 1.000 €', 'ab 500 €', 'ab 1.000 €', 'ab 2.500 €', 'ab 5.000 €']);
+    assert.deepEqual(rows, ['Freier Betrag', '15 €', '30 €', '60 €', '100 €', '150 €', '250 €', '400 €', '1.000 €', '500 €', '1.000 €', '2.500 €', '5.000 €']);
     const t = await page.$eval('#unterstuetzen', (e) => e.textContent);
     assert.match(t, /Februar 2027/);
     assert.match(t, /keine Spendenquittungen/);
